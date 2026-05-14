@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bozino's Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   🎨 CUSTOMIZE: Change colors/fonts here!
+   ============================================ */
+:root {
+  --bg:         #0d1b2a;      /* Main dark background */
+  --bg2:        #112240;      /* Card/panel background */
+  --bg3:        #0a1628;      /* Deeper background */
+  --blue:       #4fc3f7;      /* Primary blue */
+  --blue-dark:  #0288d1;      /* Darker blue */
+  --blue-glow:  #29b6f6;      /* Glow blue */
+  --white:      #e8f4fd;      /* Off-white text */
+  --white2:     #b0c4d8;      /* Dimmed text */
+  --yellow:     #ffd54f;      /* Accent yellow */
+  --green:      #69ff47;      /* Pixel green */
+  --red:        #ff6b6b;      /* Warning red */
+  --pixel:      'Press Start 2P', monospace;
+  --vt:         'VT323', monospace;
+  --border:     2px solid var(--blue);
+  --border-dim: 2px solid rgba(79,195,247,0.25);
+}
+
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--vt);
+  font-size: 18px;
+  overflow-x: hidden;
+  cursor: none;
+  image-rendering: pixelated;
+}
+
+/* Scanlines overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9000;
+}
+
+/* Pixel grid bg */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(79,195,247,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,195,247,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============ CUSTOM CURSOR ============ */
+.cursor {
+  position: fixed;
+  width: 16px; height: 16px;
+  background: var(--blue);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  image-rendering: pixelated;
+  clip-path: polygon(0 0, 60% 0, 100% 40%, 100% 100%, 40% 100%, 0 60%);
+  transition: background 0.1s;
+}
+.cursor-trail {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: var(--blue-glow);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+}
+
+/* ============ PIXEL BLINK ============ */
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes pixel-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+@keyframes scanline-move {
+  0%{transform:translateY(-100%)}
+  100%{transform:translateY(100vh)}
+}
+@keyframes fade-in-up {
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes pixel-glow {
+  0%,100%{text-shadow:0 0 8px var(--blue),0 0 20px var(--blue)}
+  50%{text-shadow:0 0 16px var(--blue),0 0 40px var(--blue),0 0 80px var(--blue-dark)}
+}
+@keyframes marquee {
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+
+/* ============ NAV ============ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 800;
+  background: var(--bg3);
+  border-bottom: var(--border);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  /* Pixel top border accent */
+  box-shadow: 0 4px 0 var(--blue-dark), 0 8px 0 rgba(79,195,247,0.1);
+}
+.nav-logo {
+  font-family: var(--pixel);
+  font-size: 0.65rem;
+  color: var(--blue);
+  text-decoration: none;
+  text-shadow: 0 0 12px var(--blue);
+  letter-spacing: 0.05em;
+}
+.nav-logo .blink { animation: blink 1s step-end infinite; color: var(--yellow); }
+.nav-links {
+  display: flex;
+  gap: 0;
+  list-style: none;
+}
+.nav-links a {
+  font-family: var(--pixel);
+  font-size: 0.42rem;
+  color: var(--white2);
+  text-decoration: none;
+  padding: 0.5rem 0.75rem;
+  letter-spacing: 0.05em;
+  transition: color 0.1s, background 0.1s;
+  border-left: 1px solid rgba(79,195,247,0.15);
+  display: block;
+  text-transform: uppercase;
+}
+.nav-links a:hover, .nav-links a.active {
+  color: var(--bg);
+  background: var(--blue);
+}
+.nav-badge {
+  font-family: var(--pixel);
+  font-size: 0.38rem;
+  background: var(--green);
+  color: var(--bg);
+  padding: 0.4rem 0.7rem;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  animation: blink 1.5s step-end infinite;
+  border: 2px solid var(--bg);
+  box-shadow: 2px 2px 0 var(--bg);
+  white-space: nowrap;
+}
+
+/* ============ TICKER ============ */
+.ticker {
+  position: fixed;
+  top: 56px; left: 0; right: 0;
+  z-index: 799;
+  background: var(--blue);
+  color: var(--bg);
+  height: 28px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.ticker-inner {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 22s linear infinite;
+}
+.ticker-inner span {
+  font-family: var(--pixel);
+  font-size: 0.42rem;
+  padding: 0 3rem;
+  letter-spacing: 0.08em;
+}
+.ticker-sep { color: var(--yellow); margin: 0 0.5rem; }
+
+/* ============ HERO ============ */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 7rem 2rem 4rem;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+.hero-window {
+  background: var(--bg2);
+  border: var(--border);
+  box-shadow: 4px 4px 0 var(--blue-dark), 8px 8px 0 rgba(79,195,247,0.15);
+  padding: 0;
+  max-width: 760px;
+  width: 100%;
+  animation: fade-in-up 0.5s ease forwards;
+}
+.window-bar {
+  background: var(--blue);
+  padding: 0.5rem 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: var(--border);
+}
+.win-dot {
+  width: 10px; height: 10px;
+  background: var(--bg3);
+  border: 1px solid rgba(255,255,255,0.3);
+  display: inline-block;
+}
+.win-dot.close { background: var(--red); }
+.win-dot.min   { background: var(--yellow); }
+.win-dot.max   { background: var(--green); }
+.window-title {
+  font-family: var(--pixel);
+  font-size: 0.42rem;
+  color: var(--bg);
+  margin-left: 0.5rem;
+  letter-spacing: 0.08em;
+}
+.hero-inner { padding: 2.5rem 2rem; }
+.hero-eyebrow {
+  font-family: var(--pixel);
+  font-size: 0.45rem;
+  color: var(--blue);
+  letter-spacing: 0.15em;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+.hero-name {
+  font-family: var(--pixel);
+  font-size: clamp(1.4rem, 5vw, 2.8rem);
+  color: var(--white);
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  animation: pixel-glow 3s ease-in-out infinite;
+  margin-bottom: 1rem;
+}
+.hero-name .blue { color: var(--blue); }
+.hero-sub {
+  font-family: var(--vt);
+  font-size: 1.5rem;
+  color: var(--white2);
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+.hero-sub strong { color: var(--yellow); }
+.hero-cursor { animation: blink 0.8s step-end infinite; color: var(--blue); }
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+.pixel-btn {
+  font-family: var(--pixel);
+  font-size: 0.45rem;
+  padding: 0.75rem 1.3rem;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s;
+  cursor: none;
+  display: inline-block;
+  border: none;
+}
+.pixel-btn:active { transform: translate(2px,2px); box-shadow: none !important; }
+.pixel-btn.primary {
+  background: var(--blue);
+  color: var(--bg);
+  box-shadow: 4px 4px 0 var(--blue-dark);
+}
+.pixel-btn.primary:hover { box-shadow: 6px 6px 0 var(--blue-dark); transform: translate(-2px,-2px); }
+.pixel-btn.secondary {
+  background: transparent;
+  color: var(--blue);
+  border: var(--border);
+  box-shadow: 4px 4px 0 rgba(79,195,247,0.3);
+}
+.pixel-btn.secondary:hover { box-shadow: 6px 6px 0 rgba(79,195,247,0.4); transform: translate(-2px,-2px); }
+.pixel-btn.yellow {
+  background: var(--yellow);
+  color: var(--bg);
+  box-shadow: 4px 4px 0 #b8860b;
+}
+.pixel-btn.yellow:hover { box-shadow: 6px 6px 0 #b8860b; transform: translate(-2px,-2px); }
+
+.hero-stats {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  border-top: var(--border-dim);
+  padding-top: 1.5rem;
+}
+.hstat {
+  text-align: center;
+}
+.hstat-num {
+  font-family: var(--pixel);
+  font-size: 0.75rem;
+  color: var(--blue);
+  display: block;
+}
+.hstat-label {
+  font-family: var(--vt);
+  font-size: 1rem;
+  color: var(--white2);
+  display: block;
+  margin-top: 0.2rem;
+}
+
+/* ============ SHARED SECTION ============ */
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+.section + .section {
+  border-top: 1px solid rgba(79,195,247,0.1);
+}
+.section-header {
+  margin-bottom: 2.5rem;
+}
+.section-tag {
+  font-family: var(--pixel);
+  font-size: 0.4rem;
+  color: var(--blue);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+.section-tag::before { content: '> '; color: var(--green); }
+.section-title {
+  font-family: var(--pixel);
+  font-size: clamp(0.7rem, 2vw, 1.1rem);
+  color: var(--white);
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+}
+.section-title .accent { color: var(--blue); }
+
+/* Reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ============ PIXEL PANEL (reusable card) ============ */
+.pixel-panel {
+  background: var(--bg2);
+  border: var(--border);
+  box-shadow: 4px 4px 0 rgba(79,195,247,0.2);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.pixel-panel:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 7px 7px 0 rgba(79,195,247,0.3);
+}
+
+/* ============ ABOUT ============ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+  align-items: start;
+}
+.about-panel { padding: 1.5rem; }
+.about-panel .panel-title {
+  font-family: var(--pixel);
+  font-size: 0.5rem;
+  color: var(--blue);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: var(--border-dim);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.about-panel .panel-title::before { content: '█'; color: var(--blue); font-size: 0.6rem; }
+.about-text {
+  font-family: var(--vt);
+  font-size: 1.25rem;
+  color: var(--white2);
+  line-height: 1.8;
+  margin-bottom: 0.8rem;
+}
+.about-text strong { color: var(--white); }
+.about-text .hi { color: var(--yellow); }
+.about-quote {
+  font-family: var(--pixel);
+  font-size: 0.38rem;
+  color: var(--blue);
+  border-left: 4px solid var(--blue);
+  padding: 0.75rem 1rem;
+  margin: 1.2rem 0;
+  background: rgba(79,195,247,0.05);
+  line-height: 2;
+  letter-spacing: 0.05em;
+}
+.about-socials { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.2rem; }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.stat-box {
+  background: var(--bg3);
+  border: var(--border-dim);
+  padding: 1rem 0.75rem;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.stat-box:hover { border-color: var(--blue); transform: scale(1.03); }
+.stat-n {
+  font-family: var(--pixel);
+  font-size: 0.85rem;
+  color: var(--blue);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+.stat-l {
+  font-family: var(--vt);
+  font-size: 1rem;
+  color: var(--white2);
+  display: block;
+}
+
+/* ============ GAMES / PROJECTS ============ */
+.games-note {
+  font-family: var(--pixel);
+  font-size: 0.38rem;
+  color: var(--yellow);
+  background: rgba(255,213,79,0.08);
+  border: 1px solid rgba(255,213,79,0.3);
+  padding: 0.75rem 1rem;
+  margin-bottom: 2rem;
+  letter-spacing: 0.08em;
+  line-height: 2;
+}
+.games-note::before { content: '⚠ '; }
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+.game-card {
+  background: var(--bg2);
+  border: var(--border);
+  box-shadow: 4px 4px 0 rgba(79,195,247,0.2);
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: none;
+}
+.game-card:hover {
+  transform: translate(-3px,-3px);
+  box-shadow: 7px 7px 0 rgba(79,195,247,0.35);
+}
+.game-card-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  image-rendering: auto;
+  border-bottom: var(--border);
+  background: var(--bg3);
+}
+.game-card-img-placeholder {
+  width: 100%; height: 180px;
+  background: var(--bg3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: var(--border);
+  font-size: 3rem;
+}
+.game-card-body { padding: 1.2rem; }
+.game-badges {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+.gbadge {
+  font-family: var(--pixel);
+  font-size: 0.32rem;
+  padding: 0.2rem 0.45rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+.gbadge.wip    { color: var(--yellow);  border-color: var(--yellow);  background: rgba(255,213,79,0.08); }
+.gbadge.sold   { color: var(--white2);  border-color: rgba(176,196,216,0.3); background: rgba(176,196,216,0.05); }
+.gbadge.cancel { color: var(--red);     border-color: var(--red);     background: rgba(255,107,107,0.08); }
+.gbadge.active { color: var(--green);   border-color: var(--green);   background: rgba(105,255,71,0.08); }
+.gbadge.year   { color: var(--blue);    border-color: var(--blue);    background: rgba(79,195,247,0.08); }
+.game-title {
+  font-family: var(--pixel);
+  font-size: 0.55rem;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  text-decoration: none;
+  display: block;
+  transition: color 0.1s;
+}
+.game-title:hover { color: var(--blue); }
+.game-desc {
+  font-family: var(--vt);
+  font-size: 1.1rem;
+  color: var(--white2);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.game-features {
+  list-style: none;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.game-features li {
+  font-family: var(--vt);
+  font-size: 1.05rem;
+  color: var(--white2);
+  padding-left: 1.2rem;
+  position: relative;
+  line-height: 1.5;
+}
+.game-features li::before { content: '▶'; position: absolute; left: 0; color: var(--blue); font-size: 0.6rem; top: 0.2rem; }
+.game-link {
+  font-family: var(--pixel);
+  font-size: 0.38rem;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  padding: 0.5rem 0.85rem;
+  display: inline-block;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s;
+  cursor: none;
+}
+.game-link:active { transform: translate(2px,2px); box-shadow: none !important; }
+.game-link.blue-link { color: var(--bg); background: var(--blue); box-shadow: 3px 3px 0 var(--blue-dark); }
+.game-link.blue-link:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--blue-dark); }
+.game-link.dim-link  { color: var(--white2); background: var(--bg3); border: 1px solid rgba(176,196,216,0.2); box-shadow: 3px 3px 0 rgba(0,0,0,0.3); }
+.game-link.dim-link:hover { transform: translate(-1px,-1px); }
+
+/* multi-image game card */
+.game-imgs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  border-bottom: var(--border);
+  background: var(--border);
+}
+.game-imgs img {
+  width: 100%; height: 120px;
+  object-fit: cover;
+  display: block;
+  background: var(--bg3);
+}
+
+/* ============ COMMISSIONS ============ */
+.comm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.comm-card {
+  background: var(--bg2);
+  border: var(--border);
+  box-shadow: 4px 4px 0 rgba(79,195,247,0.2);
+  padding: 1.5rem;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.comm-card:hover {
+  transform: translate(-3px,-3px);
+  box-shadow: 7px 7px 0 rgba(79,195,247,0.35);
+}
+.comm-stars {
+  font-family: var(--vt);
+  font-size: 1.4rem;
+  color: var(--yellow);
+  margin-bottom: 0.3rem;
+}
+.comm-score {
+  font-family: var(--pixel);
+  font-size: 0.5rem;
+  color: var(--yellow);
+  margin-bottom: 0.75rem;
+}
+.comm-title {
+  font-family: var(--pixel);
+  font-size: 0.55rem;
+  color: var(--white);
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+.comm-client {
+  font-family: var(--vt);
+  font-size: 1rem;
+  color: var(--blue);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.05em;
+}
+.comm-desc {
+  font-family: var(--vt);
+  font-size: 1.15rem;
+  color: var(--white2);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+.comm-meta {
+  font-family: var(--pixel);
+  font-size: 0.32rem;
+  color: var(--white2);
+  letter-spacing: 0.05em;
+  line-height: 2.2;
+  border-top: 1px solid rgba(79,195,247,0.15);
+  padding-top: 0.6rem;
+  margin-top: 0.6rem;
+}
+.comm-meta span { color: var(--blue); }
+
+/* ============ SHOWCASES ============ */
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.2rem;
+}
+.showcase-img-card {
+  background: var(--bg2);
+  border: var(--border);
+  box-shadow: 4px 4px 0 rgba(79,195,247,0.2);
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.showcase-img-card:hover {
+  transform: translate(-3px,-3px);
+  box-shadow: 7px 7px 0 rgba(79,195,247,0.35);
+}
+.showcase-img-card img {
+  width: 100%;
+  display: block;
+  image-rendering: auto;
+  border-bottom: var(--border-dim);
+}
+
+/* ============ SKILLS ============ */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+.skill-box {
+  background: var(--bg2);
+  border: var(--border-dim);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.skill-box:hover { border-color: var(--blue); transform: translate(-2px,-2px); }
+.skill-icon { font-size: 1.4rem; flex-shrink: 0; }
+.skill-name { font-family: var(--pixel); font-size: 0.38rem; color: var(--white); letter-spacing: 0.05em; line-height: 1.8; }
+.skill-lvl  { font-family: var(--vt); font-size: 1rem; color: var(--blue); }
+
+/* ============ AFFILIATIONS ============ */
+.aff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.aff-card {
+  background: var(--bg2);
+  border: var(--border);
+  box-shadow: 4px 4px 0 rgba(79,195,247,0.2);
+  padding: 1.3rem;
+  text-decoration: none;
+  color: var(--white);
+  display: block;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.aff-card:hover {
+  transform: translate(-3px,-3px);
+  box-shadow: 7px 7px 0 rgba(79,195,247,0.35);
+}
+.aff-plat {
+  font-family: var(--pixel);
+  font-size: 0.32rem;
+  color: var(--blue);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+.aff-name {
+  font-family: var(--pixel);
+  font-size: 0.5rem;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+}
+.aff-desc {
+  font-family: var(--vt);
+  font-size: 1.1rem;
+  color: var(--white2);
+  line-height: 1.6;
+}
+.aff-arrow {
+  font-family: var(--pixel);
+  font-size: 0.32rem;
+  color: var(--blue);
+  margin-top: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: gap 0.15s;
+}
+.aff-card:hover .aff-arrow { gap: 0.8rem; }
+
+/* ============ UPDATE LOG ============ */
+.log-wrap { position: relative; padding-left: 1.5rem; }
+.log-wrap::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--blue), transparent);
+}
+.log-entry {
+  position: relative;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(79,195,247,0.1);
+}
+.log-entry:last-child { border-bottom: none; margin-bottom: 0; }
+.log-entry::before {
+  content: '▶';
+  position: absolute;
+  left: -1.7rem;
+  top: 0.1rem;
+  color: var(--blue);
+  font-size: 0.6rem;
+}
+.log-date {
+  font-family: var(--pixel);
+  font-size: 0.38rem;
+  color: var(--blue);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+.log-title {
+  font-family: var(--pixel);
+  font-size: 0.5rem;
+  color: var(--white);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+.log-body {
+  font-family: var(--vt);
+  font-size: 1.15rem;
+  color: var(--white2);
+  line-height: 1.7;
+}
+.log-body ul { padding-left: 1.2rem; margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.2rem; }
+
+/* ============ HIRE CTA ============ */
+.hire-box {
+  background: var(--bg2);
+  border: var(--border);
+  box-shadow: 6px 6px 0 rgba(79,195,247,0.25);
+  padding: 3rem 2rem;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.hire-status {
+  font-family: var(--pixel);
+  font-size: 0.38rem;
+  color: var(--green);
+  letter-spacing: 0.15em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.hire-dot { animation: blink 1s step-end infinite; }
+.hire-title {
+  font-family: var(--pixel);
+  font-size: clamp(0.65rem, 2vw, 1rem);
+  color: var(--white);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+.hire-title .blue { color: var(--blue); }
+.hire-desc {
+  font-family: var(--vt);
+  font-size: 1.35rem;
+  color: var(--white2);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hire-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* ============ FOOTER ============ */
+footer {
+  background: var(--bg3);
+  border-top: var(--border);
+  padding: 1.5rem 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.footer-text {
+  font-family: var(--pixel);
+  font-size: 0.32rem;
+  color: var(--white2);
+  letter-spacing: 0.08em;
+  line-height: 2;
+}
+.footer-text a { color: var(--blue); text-decoration: none; }
+.footer-text a:hover { color: var(--white); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  nav { padding: 0 1rem; }
+  .about-grid { grid-template-columns: 1fr; }
+  .section { padding: 4rem 1rem; }
+  body { cursor: auto; }
+  .cursor, .cursor-trail { display: none; }
+  .footer-inner { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-trail" id="trail"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">BOZINO<span class="blink">_</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">ABOUT</a></li>
+    <li><a href="#games">GAMES</a></li>
+    <li><a href="#commissions">HIRE</a></li>
+    <li><a href="#showcases">SHOWS</a></li>
+    <li><a href="#skills">SKILLS</a></li>
+    <li><a href="#affiliations">GROUPS</a></li>
+    <li><a href="#updates">LOG</a></li>
+  </ul>
+  <!-- 🔧 EDIT: Commission link -->
+  <a href="#commissions" class="nav-badge">► COMMISSIONS OPEN!</a>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>★ BOZINO'S PORTFOLIO <span class="ticker-sep">|</span> ROBLOX DEVELOPER <span class="ticker-sep">|</span> COMMISSIONS: OPEN <span class="ticker-sep">|</span> OWNER OF LIT GAMES! <span class="ticker-sep">|</span> THE FAZBEAR WORKSHOP <span class="ticker-sep">|</span> "NOT ALL HEROES WEAR CAPES — BUT I DO" <span class="ticker-sep">|</span> CEO OF BEING A CLOWN 🤡 <span class="ticker-sep">|</span> PFP BY AMAILY <span class="ticker-sep">|</span> ★ BOZINO'S PORTFOLIO <span class="ticker-sep">|</span> ROBLOX DEVELOPER <span class="ticker-sep">|</span> COMMISSIONS: OPEN <span class="ticker-sep">|</span> OWNER OF LIT GAMES! <span class="ticker-sep">|</span> THE FAZBEAR WORKSHOP <span class="ticker-sep">|</span> "NOT ALL HEROES WEAR CAPES — BUT I DO" <span class="ticker-sep">|</span> CEO OF BEING A CLOWN 🤡 <span class="ticker-sep">|</span> PFP BY AMAILY <span class="ticker-sep">|</span></span>
+  </div>
+</div>
+
+<!-- ======== HERO ======== -->
+<section id="hero">
+  <div class="hero-window reveal">
+    <div class="window-bar">
+      <span class="win-dot close"></span>
+      <span class="win-dot min"></span>
+      <span class="win-dot max"></span>
+      <span class="window-title">BOZINO_PORTFOLIO.EXE — [RUNNING]</span>
+    </div>
+    <div class="hero-inner">
+      <!-- 🔧 EDIT: Hero text -->
+      <p class="hero-eyebrow">&gt; LOADING PROFILE... DONE!</p>
+      <h1 class="hero-name"><span class="blue">BOZ</span>INO</h1>
+      <p class="hero-sub">
+        <strong>Roblox Developer</strong> &amp; Active Creator<br>
+        RPG · Adventure · FPS · Horror<span class="hero-cursor">█</span>
+      </p>
+      <div class="hero-buttons">
+        <a href="#games" class="pixel-btn primary">► VIEW GAMES</a>
+        <a href="#commissions" class="pixel-btn yellow">$ HIRE ME</a>
+        <a href="#about" class="pixel-btn secondary">? ABOUT ME</a>
+      </div>
+      <div class="hero-stats">
+        <!-- 🔧 EDIT: Stats -->
+        <div class="hstat"><span class="hstat-num">5+</span><span class="hstat-label">GAMES SHIPPED</span></div>
+        <div class="hstat"><span class="hstat-num">28K+</span><span class="hstat-label">COMMUNITY</span></div>
+        <div class="hstat"><span class="hstat-num">3+</span><span class="hstat-label">COMMISSIONS</span></div>
+        <div class="hstat"><span class="hstat-num" style="color:var(--green)">OPEN</span><span class="hstat-label">FOR HIRE</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== ABOUT ======== -->
+<section id="about" class="section">
+  <div class="section-header reveal">
+    <p class="section-tag">PLAYER INFO</p>
+    <h2 class="section-title">ABOUT <span class="accent">BOZINO</span></h2>
+  </div>
+  <div class="about-grid">
+    <div class="pixel-panel about-panel reveal">
+      <p class="panel-title">BIO.TXT</p>
+      <!-- 🔧 EDIT: Bio text -->
+      <p class="about-text">Hey! I'm <strong>Bozino</strong> — an active Roblox developer and creator. <span class="hi">Pfp made by Amaily!</span></p>
+      <p class="about-text">I've shipped multiple games, worked with huge communities, and taken commissions across the platform. Owner of <strong>Lit Games!</strong></p>
+      <div class="about-quote">"NOT ALL HEROES WEAR CAPES" — BUT I DO.<br><br>STARCODE: COMING SOON... 😭</div>
+      <p class="about-text">Commissions are <strong style="color:var(--green)">CURRENTLY OPEN</strong> — get in line before it fills up!</p>
+      <div class="about-socials">
+        <a href="https://www.youtube.com/@BOZINOZI" target="_blank" class="pixel-btn primary" style="font-size:.32rem;padding:.5rem .75rem;">▶ YOUTUBE</a>
+        <a href="https://www.roblox.com/users/3517890678/profile" target="_blank" class="pixel-btn secondary" style="font-size:.32rem;padding:.5rem .75rem;">ROBLOX</a>
+        <a href="https://discord.gg/DaTngShGRR" target="_blank" class="pixel-btn secondary" style="font-size:.32rem;padding:.5rem .75rem;">DISCORD</a>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="stat-grid">
+        <!-- 🔧 EDIT: Stats -->
+        <div class="stat-box"><span class="stat-n">5+</span><span class="stat-l">GAMES BUILT</span></div>
+        <div class="stat-box"><span class="stat-n">28K</span><span class="stat-l">MEMBERS</span></div>
+        <div class="stat-box"><span class="stat-n">3+</span><span class="stat-l">COMMISSIONS</span></div>
+        <div class="stat-box"><span class="stat-n" style="color:var(--green)">OPEN</span><span class="stat-l">FOR HIRE</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== GAMES ======== -->
+<section id="games" class="section">
+  <div class="section-header reveal">
+    <p class="section-tag">GAME LIBRARY</p>
+    <h2 class="section-title">ALL <span class="accent">GAMES</span></h2>
+  </div>
+
+  <div class="games-note reveal">
+    CLICK ON A GAME TITLE TO VISIT ITS ROBLOX PAGE! NOT EVERYTHING IS FINAL.
+  </div>
+
+  <div class="games-grid">
+
+    <!-- ═══ STEAL A BLOCK ═══ -->
+    <div class="game-card reveal">
+      <img class="game-card-img"
+        src="https://lh3.googleusercontent.com/sitesv/APaQ0SRkW3To2oUtRN5bITnqkcAbJ4UxAqqHLw0qrDyBnqXPcJqwSVHRNg88nEwXuoThKn2Y_B9xN_idFoaPHOba7mMZRFbQELMX_MKW67baXVJr0jOa3CukzkxSGVWrp4DhjuoibAPSodJ3zyaFdKoqgP6dSxOpL7nd-iefuitVGTLMtJhi-67SApk9PIUF1DuDZTuLp3_upisZroKUbe_h0I9kdSATNBPWcOVLg2k=w1280"
+        alt="Steal a Block"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="game-card-img-placeholder" style="display:none">⛏️</div>
+      <div class="game-card-body">
+        <div class="game-badges">
+          <span class="gbadge year">2025</span>
+          <span class="gbadge sold">SOLD / NEW OWNER</span>
+          <span class="gbadge wip">WIP</span>
+        </div>
+        <a href="https://www.roblox.com/games/97361312667250/Steal-a-Block" target="_blank" class="game-title">⛏️ STEAL A BLOCK</a>
+        <p class="game-desc">⚠️ Still under development — report bugs in the community!</p>
+        <ul class="game-features">
+          <li>Buy blocks &amp; make cash</li>
+          <li>Steal blocks from other players</li>
+          <li>Rebirth for multipliers, tools &amp; cash</li>
+          <li>Troll tools to mess with others!</li>
+          <li>Desktop, Mobile, VR &amp; Tablet support</li>
+          <li>New updates EVERY week!</li>
+          <li>Like + join group for a reward!</li>
+        </ul>
+        <a href="https://www.roblox.com/games/97361312667250/Steal-a-Block" target="_blank" class="game-link blue-link">► PLAY GAME</a>
+      </div>
+    </div>
+
+    <!-- ═══ STUD MINERS ═══ -->
+    <div class="game-card reveal">
+      <img class="game-card-img"
+        src="https://lh3.googleusercontent.com/sitesv/APaQ0SSYyh9pt-VlSXRc5fWrkKCr3G-5ID3A5LFk6snM_4uWQlCx1cGRBujHfrNJecOCXWtDpHtvBylo8GY7TbCE3_nr_QnA9YMiDhgRh9--tSs4h-a__rzQncksx3T5_LVb-GDdzE3AtxCLWvP2Vn54LQLotvatbUdoAU9YD9Nf7LGnqBQkPCcKWHlqOht69JmWmbif0sxdqQNaJEnMWdVzq8IwFTFiyYwbq6kIa_0=w1280"
+        alt="Stud Miners"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="game-card-img-placeholder" style="display:none">⛏️</div>
+      <div class="game-card-body">
+        <div class="game-badges">
+          <span class="gbadge wip">WIP</span>
+        </div>
+        <a href="https://www.roblox.com/games/86955023859955/Stud-Miners" target="_blank" class="game-title">⛏️ STUD MINERS!</a>
+        <p class="game-desc">Hold your pickaxe tight and dig till your next island!</p>
+        <ul class="game-features">
+          <li>Discover new ores &amp; hidden secrets</li>
+          <li>Find new tools in the tool shop</li>
+          <li>Become #1 across all of Roblox!</li>
+          <li>Dig down to reach the earth's core</li>
+          <li>Become the richest in the Stud World!</li>
+        </ul>
+        <a href="https://www.roblox.com/games/86955023859955/Stud-Miners" target="_blank" class="game-link blue-link">► PLAY GAME</a>
+      </div>
+    </div>
+
+    <!-- ═══ FNAF WORLD ═══ -->
+    <div class="game-card reveal">
+      <!-- Multi-image: show 3 screenshots in a grid -->
+      <div class="game-imgs">
+        <img src="https://lh3.googleusercontent.com/sitesv/APaQ0STpJm0Ass2Rg7-LaeTsOgD1JQmrjiQK6CrlfVar9X1kMp3TIoQ5weJs-JqQezQPQOa8-wCxa5Cg2ODQqA1WbEKUgNdfd_vHL6VDXp8ykvqJ1TiXdwWKzcIwQOd4OYUXfSkofcaKvFmcd1rnYkr8t6WBx0vo1nkRR0Bt7ZXxYOwzYresfejaxhECWNzf4tBV-O9TzNj0ZVOyq2QG-LjUx_R95VY8Mrjpc_S0Fe8=w1280" alt="FNaF World 1">
+        <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SRbNVS8qV3UjWAHgx_2RuUtotV06Ts51jI-qLFYqP0XMLl4Ywm8eGnihVWGw7rxrAONDjgTwACYYuIllttF_HhfXOYoBvWCmOXIGIDUEd9tisRvtwDEs9t4vNEB6m2e1THSMqHtR34pHcafdec95zGE-9bEYKLAUi49qIhhXE3Y-eOq6M6nHLuv9t_U8poDNROhE_ngjNZ-615mDF5sNKRkjYph8n-C5IBWA54=w1280" alt="FNaF World 2">
+        <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SQWJYDhN_Jcfbmt-5sI_HPfaMMtxqizgRkPBMbP5Or34F-lktLYMtjlKRCWth0Fc1XLHxIi_rHK2XUQ2yC4RyhHj5Bp17jZuAhq-BfjNwRlHV-PbHqsQHI1BS7agmrBonNWsx3vG51qbn5AnRZHSDVPe2cjLqnM-BljiURUSdX6sqVDE7GDpcGxq8-3jY6KZmmRC9LS_t5jLoni9BnlJwBd0URKEFz_4g3t=w1280" alt="FNaF World 3">
+        <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SRhPjMiN0U_INO2IKfrB7f1Adbxv8x3tnPZPZXgYOsmILamVUKOP0-qYowTwiQJxpWHAHjr0RnuYoE1RqHCSTWFWTLUg0Rgwr1laiG8MzJ93AopXG3DCjiaZ0iuZOMazE3-ZSbf_CjQOKx0SsA9L2Wc1BMbf_r1vMSdioBHku9ZWztgcoaIozXCGpAcUvUV5YdXnva0kNu-pATpqIxurZ-4j-j_dCR3onp8n3U=w1280" alt="FNaF World 4">
+      </div>
+      <div class="game-card-body">
+        <div class="game-badges">
+          <span class="gbadge cancel">CANCELLED</span>
+          <span class="gbadge year">2023–2024</span>
+        </div>
+        <a href="https://www.roblox.com/games/16700561795/FNaF-World-Lost-in-Time-Fnaf-World-RPG" target="_blank" class="game-title">🌀 FNAF WORLD: LOST IN TIME</a>
+        <p class="game-desc">⚠️ WARNING: Flashing lights &amp; loud sounds.<br>Sometimes the world brings fractured pieces into our universe. But at the end the heroes always win… right?</p>
+        <a href="https://www.roblox.com/games/16700561795/FNaF-World-Lost-in-Time-Fnaf-World-RPG" target="_blank" class="game-link dim-link">► VIEW ARCHIVE</a>
+      </div>
+    </div>
+
+    <!-- ═══ UNTITLED BATTLEGROUNDS ═══ -->
+    <div class="game-card reveal">
+      <img class="game-card-img"
+        src="https://lh3.googleusercontent.com/sitesv/APaQ0SS1_MnBn0jetHH_zKI48Xsuua7z5SvQ1pZbdfenAbf77U3tqC3amMqR5FWSw3eRNrFvIKH7I5lSlvN_vXa2KkyOPkWlqbUmLba1xS4WD-5LCigtSJ7bG1bOBu1J6owEveJawjUoJYF5LE9H49kJuD1yT4Ln7yMWIAsBqewhOlcmB_9eb9ROubgQr16Eq1K617vwHp__KpHwQeMjufvX1Dm5Oyl1tM7QbywK=w1280"
+        alt="Untitled Battlegrounds"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="game-card-img-placeholder" style="display:none">⚔️</div>
+      <div class="game-card-body">
+        <div class="game-badges">
+          <span class="gbadge sold">SOLD</span>
+          <span class="gbadge year">2025</span>
+        </div>
+        <a href="https://www.roblox.com/games/93585929907013/OLD-Untitled-Battlegrounds" target="_blank" class="game-title">⚔️ UNTITLED BATTLEGROUNDS</a>
+        <p class="game-desc">Play movesets from people you may know from the classic and modern eras! Themed around 2011–2020 Roblox.</p>
+        <ul class="game-features">
+          <li>Classic &amp; Modern era movesets</li>
+          <li>2011 Roblox up to 2020 Roblox</li>
+          <li>Enjoy &amp; fight! (Consoles/VR TBD)</li>
+        </ul>
+        <a href="https://www.roblox.com/games/93585929907013/OLD-Untitled-Battlegrounds" target="_blank" class="game-link dim-link">► VIEW ARCHIVE</a>
+      </div>
+    </div>
+
+    <!-- ═══ FAZSTAR'S REBRANDED ═══ -->
+    <div class="game-card reveal">
+      <img class="game-card-img"
+        src="https://lh3.googleusercontent.com/sitesv/APaQ0SSZhRzao4dKg36kTwouZocEDx4XikVS386VYkQF76UNZwhb2z1eCMMLASMQYnXCDAre-0EYrvSX6FBczoMgpE9jUSekKaWut1Ef6KSQyq3qXDhqdFP2KSYSlNaVb7iqwKFdmzWcZ3uIeycJyXbbe5Tzw2fsRbsc0Em-ey7-vMA5SXrftOHasNYITk2FqdNj-u6vELT2cK1EN9xP6-quldnI34rcURxaFCKqyok=w1280"
+        alt="Fazstar's Rebranded"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="game-card-img-placeholder" style="display:none">🐻</div>
+      <div class="game-card-body">
+        <div class="game-badges">
+          <span class="gbadge cancel">CANCELLED</span>
+          <span class="gbadge year">2025</span>
+        </div>
+        <a href="https://www.roblox.com/games/72908976658782/WIP-Fazstars-Rebranded-Retold-Roleplay" target="_blank" class="game-title">🐻 FAZSTAR'S REBRANDED &amp; RETOLD</a>
+        <p class="game-desc">Are you ready for Freddy? Play as animatronics, use props &amp; play mini-games! Everyone is safe in Fazbear's Rebranded Pizza Place... even though he... always... comes.... back.....</p>
+        <a href="https://www.roblox.com/games/72908976658782/WIP-Fazstars-Rebranded-Retold-Roleplay" target="_blank" class="game-link dim-link">► VIEW ARCHIVE</a>
+      </div>
+    </div>
+
+    <!-- ═══ SQUID GAME: REVOLUTION ═══ -->
+    <div class="game-card reveal">
+      <img class="game-card-img"
+        src="https://lh3.googleusercontent.com/sitesv/APaQ0SSMibrBZabg-gnTnsbESaBtK5s5ELfIm0UH5h0iwIZxbJy0l-8XxhHesmDS04b-1P3iSZUnJb3qhCti6LTWeJ9vNs_8w9uGPMZpzRIJW7GRWwhTBDY4xxgGCZxS1Q6oUWwyJiADt2Ih4seEl-jHU6HsHmLlL2ytdJfdxjcG1FAD_4rSu59OU_t_kqbvLcr5AOB6dMmnSFWx80jpResM42d5b45TylGA6FlYDFU=w1280"
+        alt="Squid Game Revolution"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="game-card-img-placeholder" style="display:none">🦑</div>
+      <div class="game-card-body">
+        <div class="game-badges">
+          <span class="gbadge sold">SOLD</span>
+          <span class="gbadge year">2025</span>
+        </div>
+        <a href="https://www.roblox.com/games/85862577329248/Squid-Game-Revolution" target="_blank" class="game-title">🦑 SQUID GAME: REVOLUTION</a>
+        <p class="game-desc">After the events of Squid Game Season 2, you find yourself back for a different challenge. Go against Teams of 2 and become the last team standing!</p>
+        <a href="https://www.roblox.com/games/85862577329248/Squid-Game-Revolution" target="_blank" class="game-link dim-link">► VIEW ARCHIVE</a>
+      </div>
+    </div>
+
+    <!-- ═══ OTHER / WIP PROJECTS ═══ -->
+    <div class="game-card reveal" style="grid-column: 1 / -1;">
+      <div class="window-bar" style="border-bottom:var(--border)">
+        <span class="win-dot close"></span><span class="win-dot min"></span><span class="win-dot max"></span>
+        <span class="window-title">OTHER_PROJECTS.TXT — ⚠️ STILL WIP!</span>
+      </div>
+      <div class="game-imgs" style="grid-template-columns:1fr 1fr;border-bottom:var(--border)">
+        <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SRm4Rr4jCqqypsVi_i_VbZTNu4PMn0XwhISZpXlPDASgCcgDuMMM4YP6ZyTvpczt-EhtQiCDbC8EO9DR2svAfjojiX3-8VYSUXXs1tqFHudgmjfLtBc6tO7MnzsjNn9GUYsmWR-_gWy69f2KT8J-uU-e1Y04IYop8xmjzfljHjjw01FLgmvId_HrVSSYv765cfAyfaTmvZ6BZnb9T9I9jhrHtP0uduLfZ6A=w1280" alt="Other project 1" style="height:160px">
+        <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SSsuep-jfycTzNqpUEkV9rmxELjmBw_VyPSIUIp4RMann-wo1es_al9rlsU0gHHjtofvQQv73s7YNtyyrSvsgUUAtM0-IgBZaMpHXiIM5JrAIt7By6YaWlMqe5fWJBRfG1fXXEV8Ai2FWpyl2yDs29ELzkIScrdgejRYq_wKkTnxw8ZAn1-r3sePUjTetZfWtTcystANeNJQF9GA4D6qjiNm4M73U6WlO6n=w1280" alt="Other project 2" style="height:160px">
+      </div>
+      <div class="game-card-body">
+        <p class="game-desc">Other projects I've been a part of — more details coming soon! These are still a work in progress.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======== COMMISSIONS ======== -->
+<section id="commissions" class="section">
+  <div class="section-header reveal">
+    <p class="section-tag">FOR HIRE</p>
+    <h2 class="section-title">COMMISSIONS <span class="accent">&amp; HIRE</span></h2>
+  </div>
+
+  <div class="games-note reveal">
+    MY COMMISSIONS ARE CURRENTLY OPEN! GET IN LINE BEFORE SPOTS FILL UP. I BUILD MAPS, LOBBIES, UI, GAMES, ASSET PACKS &amp; MORE FOR ROBLOX.
+  </div>
+
+  <div class="comm-grid">
+    <!-- 🔧 EDIT: Copy a .comm-card block to add a new commission -->
+
+    <div class="comm-card reveal">
+      <div class="comm-stars">★★★★☆</div>
+      <div class="comm-score">8.5 / 10</div>
+      <h3 class="comm-title">SQUID GAME LOBBY</h3>
+      <p class="comm-client">CLIENT: FREXZY</p>
+      <p class="comm-desc">Built a complete Squid Game themed lobby from scratch. Rated 8.5/10 by the client.</p>
+      <div class="comm-meta">⏱ TIME: <span>2 HOURS</span><br>📅 COMPLETED: <span>JUNE 19, 2025</span></div>
+    </div>
+
+    <div class="comm-card reveal">
+      <div class="comm-stars">★★★★☆</div>
+      <div class="comm-score">8.5 / 10</div>
+      <h3 class="comm-title">PLANT PACK</h3>
+      <p class="comm-client">CLIENT: MRLUFFYTHEGAMER</p>
+      <p class="comm-desc">Created a custom plant asset pack for a Roblox game. Rated 8.5/10 by the client.</p>
+      <div class="comm-meta">⏱ TIME: <span>30 MIN</span><br>📅 COMPLETED: <span>JUNE 24, 2025</span></div>
+    </div>
+
+    <div class="comm-card reveal">
+      <div class="comm-stars">★★★★★</div>
+      <div class="comm-score">9 / 10</div>
+      <h3 class="comm-title">SQUID GAME MAP REVAMP</h3>
+      <p class="comm-client">CLIENT: DASWAGGYTURDLE</p>
+      <p class="comm-desc">Full map revamp including lobby redesign, icons and visual overhaul. Rated 9/10!</p>
+      <div class="comm-meta">⏱ TIME: <span>5 HOURS</span><br>📅 COMPLETED: <span>JUNE 26, 2025</span></div>
+    </div>
+
+  </div>
+
+  <!-- Contact / social links -->
+  <div style="margin-top:2.5rem" class="reveal">
+    <p class="section-tag" style="margin-bottom:1rem;">GET IN TOUCH</p>
+    <div class="aff-grid">
+      <a href="https://www.youtube.com/@BOZINOZI" target="_blank" class="aff-card">
+        <p class="aff-plat">YOUTUBE</p>
+        <p class="aff-name">@BOZINOZI</p>
+        <p class="aff-desc">Active dev on Roblox &amp; more. Pfp by Amaily!</p>
+        <span class="aff-arrow">VISIT ►</span>
+      </a>
+      <a href="https://www.roblox.com/users/3517890678/profile" target="_blank" class="aff-card">
+        <p class="aff-plat">ROBLOX</p>
+        <p class="aff-name">N0TB0Z1N0R3AL</p>
+        <p class="aff-desc">Active developer. RPG, FPS, Adventure &amp; Horror games.</p>
+        <span class="aff-arrow">VIEW PROFILE ►</span>
+      </a>
+      <a href="https://discord.gg/DaTngShGRR" target="_blank" class="aff-card">
+        <p class="aff-plat">DISCORD</p>
+        <p class="aff-name">TFW SERVER</p>
+        <p class="aff-desc">842+ members — best place to reach me for commissions!</p>
+        <span class="aff-arrow">JOIN ►</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ======== SHOWCASES ======== -->
+<section id="showcases" class="section">
+  <div class="section-header reveal">
+    <p class="section-tag">SHOWCASE GALLERY</p>
+    <h2 class="section-title">SHOW<span class="accent">CASES!</span></h2>
+  </div>
+  <div class="showcase-grid">
+    <!-- Images pulled from the Showcases page -->
+    <div class="showcase-img-card reveal">
+      <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SQPGS3zxlM32IVWO5Jq4oJZG93QVBg8AMS62q8xrH7J7pzkG14C6q2hgmA5Vl58Rl0wOYaqwkmGotw4af1hnfO8ThYzpNwY544vv2uixWYozK-P37L_xRIoox163sAPlJ011uLZB_XxPSBf7TyMBmomipk0mqm7T7YBpeIHvz67opFkJ-jMVBQsTzhLKhDSERdcnHAq0tu0aYoLyHIEHPkBaN3jHJghFuVHY64=w1280" alt="Showcase 1">
+    </div>
+    <div class="showcase-img-card reveal">
+      <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SSRRo52eHbpzGbPqG10g_F47Yy-cskv_z6Ow79SyHq36XKqs2N-dwXZWq_srTE2ZrrtZxkfZnGhVkOUMPKfixC28MiK5ARsXkQYbx19jEvMKjpfjwrd4oT86VL8CwRyqGRtW5tFpyQpep4VDyOkESz8NkomLSpLbMrYA0EITwPVQ4buY2GJ1Md9rJSclQqLq4c9TF50zRC104qWrWakuSbEyx3hCuvj8asO8Ec=w1280" alt="Showcase 2">
+    </div>
+    <div class="showcase-img-card reveal">
+      <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SQkp3n101TJDRDkI7fIRCGf5Q4HHjIsasg_6DGFHHjrtOjepRVxFY3DTr-MjsOkdlhpCgrIcxW7NU3UktoibDlSAECEZXuEMOeonCnZkw3JLp1LCnfP56EkQrUSV062Di4iZURb6jvxbN5Q2gP9OxFKASzYPG-rX4rjDFfYQql4knf-Gcm-AWKYitntrqngwQ5Xak5SoOYY-ALismnX9JjkO6BIXASO42IiSuw=w1280" alt="Showcase 3">
+    </div>
+    <!-- Commission showcase images from the hire page -->
+    <div class="showcase-img-card reveal">
+      <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SQnEvdOliqRviVa8lj61B1UNkYj8TtYaRI-GtVFKATxO9bDyryFkVTtDWRJ3dfDLTD51I_-6BzkEztlwDOfnlBv--K0xe_iO8L76M_eyaB9cG1O_4OGXaTIuT711-kgxBfuEcWoTX5dbIXnevqadpII1P-bRyhfrUnIW4nsyUUGATnpKnVsr8Koj5aTCoJ7BG43Znyl9gBVajdfLSDILQHQzMtqQiTPc_Ri4Rg=w1280" alt="Squid Game Lobby Commission">
+    </div>
+    <div class="showcase-img-card reveal">
+      <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SSzPg3JrhlQccKNbyQ814wV3qm9Tmy50NBALFsZzBXinfrju-DrXNZs6wITh6rZr2NHSIXkStGpkRoh6S7hbxnsBP7T7qm26tOgXpPSXIaHv4JwHqxlQ097ygImaZ6ATjBayoQb2N3BBdvs7CHvKQLelpZxxgVWgZuO4ck6Lvwx6nSo-rTXVFwGb3_V5rWm1TDIxxMxmEkPUnHfab6rsldW-EY7WFgu4CHN0g0=w1280" alt="Plant Pack Commission">
+    </div>
+    <div class="showcase-img-card reveal">
+      <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SQw96ZOVe9EYom-nk4vYuGvaHLsEgK9hlPLOaKgy_5n7_S6UbjG-wyIh7uBQLKSWkNoG8DB0FAWa6mqzghze6i4fcj_yTS3LbT1NaTlVWqRNTetWqGzAG9gTwxKd4qaB76eiDuX4UZCs9lXxcb-f_5PM3yLjkP97h8h5jux9UAHsZ_SlOzOpedDtO7wPOYMK0Zi_n4KUgpBNRmDF_ontPspgNeBgkm_z85B3Ck=w1280" alt="Commission work">
+    </div>
+    <div class="showcase-img-card reveal">
+      <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SQwHFWEvJq-1SeLstfMbMk7aPyE1P-9mHLFokxAymzfQowDBbzqUUTgRV6ZcZ_t4YmMCT7EoMzMAUoWZVW_VgRHd91Q0JcH5ZuuFAaYmKjmMsgT7hxpPIs278u4oYwUeuOXR_nf-nF4RD2fpAkv2m0V9lQq64aQBNtIKMx30jDdAfdwJ5KgduzoqtEM2hFpW0PMx9JiHsh6BdjG6JMfBbqy1mzQ-EBEuyk29=w1280" alt="Commission work 2">
+    </div>
+    <div class="showcase-img-card reveal">
+      <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SS5tzwhS-mXN_hPCHq9otvdfwfwI3OLffHyvmWgW83qDp1MznpTulat0f1rqDSejUNfOtrqSHrV9rILAwE1RAsB9MiXCr53qprv3uNKjcRWUlyP19Lr2Pf5q6y5cjLY9pPn5QzLnEurzttuDl9aDwbvXdfMxspnHJB9kdxnJS5UnFhu=w1280" alt="Commission work 3">
+    </div>
+    <div class="showcase-img-card reveal">
+      <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SSKzX_hnqZ1685jyxFfynbXX6XecOIFPKbmJL00LqyK2LeSsIfUQhgRkYhyI5yvKynmpc40PAcLECSfsMBc3riw_jofgeJ3ZxAB7MA55XmjZIZhJS5PMtcUJw9YE0xlEh102eGK8jQwp_oxee4EcHpFsyjoqyiS8E4k2FnNmYHjZuBnT57PbgWztw7nfVbiGl1eBZc28g4cogj5onBzYpqU3TvaPFw=w1280" alt="Commission work 4">
+    </div>
+  </div>
+</section>
+
+<!-- ======== SKILLS ======== -->
+<section id="skills" class="section">
+  <div class="section-header reveal">
+    <p class="section-tag">PLAYER STATS</p>
+    <h2 class="section-title">SKILLS <span class="accent">&amp; ABILITIES</span></h2>
+  </div>
+  <div class="skills-grid reveal">
+    <!-- 🔧 EDIT: Add/remove skill boxes -->
+    <div class="skill-box"><span class="skill-icon">🏗️</span><div><div class="skill-name">ROBLOX STUDIO</div><div class="skill-lvl">ADVANCED</div></div></div>
+    <div class="skill-box"><span class="skill-icon">💻</span><div><div class="skill-name">LUA / LUAU</div><div class="skill-lvl">ADVANCED</div></div></div>
+    <div class="skill-box"><span class="skill-icon">🗺️</span><div><div class="skill-name">MAP BUILDING</div><div class="skill-lvl">ADVANCED</div></div></div>
+    <div class="skill-box"><span class="skill-icon">🦑</span><div><div class="skill-name">LOBBY DESIGN</div><div class="skill-lvl">STRONG</div></div></div>
+    <div class="skill-box"><span class="skill-icon">🎮</span><div><div class="skill-name">GAME DESIGN</div><div class="skill-lvl">INTERMEDIATE</div></div></div>
+    <div class="skill-box"><span class="skill-icon">🎨</span><div><div class="skill-name">UI / UX DESIGN</div><div class="skill-lvl">INTERMEDIATE</div></div></div>
+    <div class="skill-box"><span class="skill-icon">🤝</span><div><div class="skill-name">COMMISSIONS</div><div class="skill-lvl">EXPERIENCED</div></div></div>
+    <div class="skill-box"><span class="skill-icon">📢</span><div><div class="skill-name">COMMUNITY MGMT</div><div class="skill-lvl">EXPERIENCED</div></div></div>
+    <div class="skill-box"><span class="skill-icon">🎬</span><div><div class="skill-name">YOUTUBE</div><div class="skill-lvl">CREATOR</div></div></div>
+  </div>
+</section>
+
+<!-- ======== AFFILIATIONS ======== -->
+<section id="affiliations" class="section">
+  <div class="section-header reveal">
+    <p class="section-tag">GUILDS &amp; GROUPS</p>
+    <h2 class="section-title">AFFILI<span class="accent">ATIONS</span></h2>
+  </div>
+  <div class="aff-grid">
+    <!-- 🔧 EDIT: Add/remove affiliation cards -->
+    <a href="https://www.roblox.com/communities/35066611/The-FazBear-WorkShop#!" target="_blank" class="aff-card reveal">
+      <p class="aff-plat">ROBLOX COMMUNITY</p>
+      <p class="aff-name">THE FAZBEAR WORKSHOP</p>
+      <p class="aff-desc">Owned by Huskyman916 — 28,928 members. FNaF-themed creative community.</p>
+      <span class="aff-arrow">VISIT ►</span>
+    </a>
+    <a href="https://www.roblox.com/communities/35659217/Freddys-Faz-Stars-Services#!" target="_blank" class="aff-card reveal">
+      <p class="aff-plat">ROBLOX COMMUNITY</p>
+      <p class="aff-name">FREDDY'S FAZ-STARS</p>
+      <p class="aff-desc">FazBear services community. Active developer and contributor.</p>
+      <span class="aff-arrow">VISIT ►</span>
+    </a>
+    <a href="https://www.roblox.com/communities/15446641/Lit-Games#!" target="_blank" class="aff-card reveal">
+      <p class="aff-plat">ROBLOX COMMUNITY · OWNER</p>
+      <p class="aff-name">LIT GAMES!</p>
+      <p class="aff-desc">Owned by N0TB0Z1N0R3AL — 154 members. On a new journey, building games the community wants!</p>
+      <span class="aff-arrow">VISIT ►</span>
+    </a>
+    <a href="https://discord.gg/DaTngShGRR" target="_blank" class="aff-card reveal">
+      <p class="aff-plat">DISCORD SERVER</p>
+      <p class="aff-name">TFW DISCORD</p>
+      <p class="aff-desc">Official FazBear's Workshop Discord — 842+ members. Come hang out, play &amp; team up!</p>
+      <span class="aff-arrow">JOIN ►</span>
+    </a>
+  </div>
+</section>
+
+<!-- ======== UPDATE LOG ======== -->
+<section id="updates" class="section">
+  <div class="section-header reveal">
+    <p class="section-tag">PATCH NOTES</p>
+    <h2 class="section-title">UPDATE <span class="accent">LOG!</span></h2>
+  </div>
+  <div class="log-wrap reveal">
+    <!-- 🔧 EDIT: Add new entries at the TOP -->
+
+    <div class="log-entry">
+      <p class="log-date">DEC 6, 2025</p>
+      <h3 class="log-title">TEXT OVERRIDE &amp; QUALITY UPGRADES</h3>
+      <div class="log-body">
+        <p>Upgraded the overall quality of the portfolio and refreshed text sections.</p>
+        <ul>
+          <li>Changed: Text Override across multiple pages</li>
+          <li>Upgraded quality &amp; descriptions</li>
+          <li>Various small improvements</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="log-entry">
+      <p class="log-date">INITIAL LAUNCH</p>
+      <h3 class="log-title">PORTFOLIO V1 — GOES LIVE</h3>
+      <div class="log-body">
+        <p>First version of Bozino's portfolio launched on Google Sites. Projects, commissions, showcases and affiliations all live!</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======== HIRE CTA ======== -->
+<section class="section" style="border-top:var(--border);">
+  <div class="hire-box reveal">
+    <div class="window-bar" style="border-bottom:var(--border);margin:-3rem -2rem 2rem;padding:.5rem 1rem;">
+      <span class="win-dot close"></span><span class="win-dot min"></span><span class="win-dot max"></span>
+      <span class="window-title">HIRE_BOZINO.EXE</span>
+    </div>
+    <div class="hire-status"><span class="hire-dot">█</span> COMMISSIONS: ONLINE</div>
+    <!-- 🔧 EDIT: CTA heading + description -->
+    <h2 class="hire-title">READY TO BUILD<br><span class="blue">SOMETHING EPIC?</span></h2>
+    <p class="hire-desc">Got a game idea? Need a map, lobby, UI, or system built on Roblox? I'm open for commissions. Get in line before spots fill up!</p>
+    <div class="hire-btns">
+      <a href="https://discord.gg/DaTngShGRR" target="_blank" class="pixel-btn primary">► DM ON DISCORD</a>
+      <a href="https://www.roblox.com/users/3517890678/profile" target="_blank" class="pixel-btn secondary">ROBLOX PROFILE</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FOOTER ======== -->
+<footer>
+  <div class="footer-inner">
+    <!-- 🔧 EDIT: Footer text -->
+    <p class="footer-text">© 2025 BOZINO. ALL RIGHTS RESERVED.</p>
+    <p class="footer-text">BUILT WITH ❤️ &amp; LUA</p>
+    <p class="footer-text"><a href="#hero">▲ BACK TO TOP</a></p>
+  </div>
+</footer>
+
+<script>
+// Custom pixel cursor
+const cur = document.getElementById('cur');
+const trail = document.getElementById('trail');
+let mx=0,my=0,tx=0,ty=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+(function anim(){
+  tx+=(mx-tx)*0.18; ty+=(my-ty)*0.18;
+  trail.style.left=tx+'px'; trail.style.top=ty+'px';
+  requestAnimationFrame(anim);
+})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ cur.style.background='var(--yellow)'; cur.style.width='20px'; cur.style.height='20px'; });
+  el.addEventListener('mouseleave',()=>{ cur.style.background='var(--blue)'; cur.style.width='16px'; cur.style.height='16px'; });
+});
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      let i=0;
+      e.target.querySelectorAll('.reveal').forEach(c=>{
+        c.style.transitionDelay=(i*0.07)+'s';
+        c.classList.add('visible');
+        i++;
+      });
+    }
+  });
+},{threshold:0.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Active nav on scroll
+const secs = document.querySelectorAll('section[id]');
+const links = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(s=>{ if(window.scrollY>=s.offsetTop-180) cur=s.id; });
+  links.forEach(a=>{ a.classList.toggle('active', a.getAttribute('href')==='#'+cur); });
+},{passive:true});
+</script>
+</body>
+</html>
