@@ -3,113 +3,124 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Bozino — Roblox map builder and game developer. Commissions open. Maps, lobbies, UI, full games."/>
-<meta name="keywords" content="Roblox developer, commissions, map builder, Roblox Studio, game dev, hire"/>
-<title>Bozino — Portfolio</title>
+<meta name="description" content="Bozino — Roblox map builder and game developer. Commissions open."/>
+<title>Bozino — Roblox Developer</title>
+<link rel="icon" type="image/png" href="favicon.png"/>
+<link rel="shortcut icon" href="favicon.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root {
-  --bg: #f5f3ef;
-  --bg2: #efecea;
-  --surface: #ffffff;
-  --border: #e0ddd8;
-  --border2: #ccc9c4;
-  --ink: #1a1917;
-  --ink2: #5a5855;
-  --ink3: #9a9793;
-  --accent: #c8432a;
-  --accent-pale: #f7ede9;
-  --sidebar-w: 220px;
-  --ff-display: 'Outfit', sans-serif;
-  --ff-serif: 'Outfit', sans-serif;
-  --ff-mono: 'DM Mono', monospace;
+:root{
+  --bg:#f5f3ef;--bg2:#efecea;--surface:#fff;--border:#e0ddd8;--border2:#ccc9c4;
+  --ink:#1a1917;--ink2:#5a5855;--ink3:#9a9793;
+  --accent:#c8432a;--accent-pale:#f7ede9;
+  --sidebar-w:220px;
+  --ff:'Outfit',sans-serif;--ffm:'DM Mono',monospace;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font-family:var(--ff-display);min-height:100vh;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font-family:var(--ff);min-height:100vh;overflow-x:hidden}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2)}
 
-/* SIDEBAR */
+/* ── SIDEBAR ── */
 #sidebar{position:fixed;left:0;top:0;width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100}
-.sb-logo{padding:32px 28px 24px;border-bottom:1px solid var(--border)}
-.sb-logo-name{font-size:22px;font-weight:800;letter-spacing:-0.5px;color:var(--ink);line-height:1}
+.sb-logo{padding:28px 28px 20px;border-bottom:1px solid var(--border)}
+.sb-logo-name{font-size:22px;font-weight:800;letter-spacing:-0.5px;color:var(--ink)}
 .sb-logo-name span{color:var(--accent)}
-.sb-status{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-family:var(--ff-mono);font-size:10px;color:var(--ink3);letter-spacing:0.5px}
+.sb-status{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-family:var(--ffm);font-size:10px;color:var(--ink3)}
 .sb-dot{width:6px;height:6px;border-radius:50%;background:#2ea84f;animation:pulse 2.5s ease infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.sb-nav{flex:1;padding:20px 0;overflow-y:auto}
-.sb-label{font-family:var(--ff-mono);font-size:9px;letter-spacing:2px;color:var(--ink3);padding:10px 28px 6px;text-transform:uppercase}
-.sb-link{display:flex;align-items:center;gap:10px;padding:9px 28px;text-decoration:none;color:var(--ink2);font-size:13px;font-weight:500;border-left:2px solid transparent;transition:all .15s}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.sb-nav{flex:1;padding:16px 0;overflow-y:auto}
+.sb-label{font-family:var(--ffm);font-size:9px;letter-spacing:2px;color:var(--ink3);padding:10px 28px 6px;text-transform:uppercase}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 28px;text-decoration:none;color:var(--ink2);font-size:13px;font-weight:500;border-left:2px solid transparent;transition:all .15s;cursor:pointer;background:none;border-top:none;border-right:none;border-bottom:none;width:100%;text-align:left}
 .sb-link:hover,.sb-link.active{color:var(--ink);background:var(--bg2);border-left-color:var(--accent)}
 .sb-link-dot{width:4px;height:4px;border-radius:50%;background:var(--border2);flex-shrink:0;transition:background .15s}
 .sb-link:hover .sb-link-dot,.sb-link.active .sb-link-dot{background:var(--accent)}
-.sb-footer{padding:20px 28px;border-top:1px solid var(--border)}
-.sb-socials{display:flex;flex-direction:column;gap:6px}
-.sb-social-link{font-family:var(--ff-mono);font-size:10px;color:var(--ink3);text-decoration:none;letter-spacing:0.5px;transition:color .15s}
+.sb-footer{padding:16px 28px;border-top:1px solid var(--border)}
+.sb-socials{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.sb-social-link{font-family:var(--ffm);font-size:10px;color:var(--ink3);text-decoration:none;transition:color .15s}
 .sb-social-link:hover{color:var(--accent)}
 
-/* MAIN */
+/* Auth button in sidebar */
+#auth-btn{width:100%;padding:9px 14px;border-radius:7px;border:1px solid var(--border2);background:var(--bg2);color:var(--ink2);font-family:var(--ff);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:8px;margin-top:2px}
+#auth-btn:hover{border-color:var(--accent);color:var(--accent)}
+#auth-avatar{width:22px;height:22px;border-radius:50%;object-fit:cover;display:none}
+
+/* ── MAIN ── */
 #main{margin-left:var(--sidebar-w);min-height:100vh}
 
-/* HERO */
+/* ── DONATION BAR ── */
+#donate-bar{background:var(--ink);color:rgba(255,255,255,.85);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:200;border-bottom:1px solid rgba(255,255,255,.08)}
+.donate-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.donate-label{font-family:var(--ffm);font-size:10px;letter-spacing:1.5px;color:rgba(255,255,255,.5);text-transform:uppercase;white-space:nowrap}
+.donate-track{width:140px;height:4px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden;flex-shrink:0}
+.donate-fill{height:100%;background:var(--accent);border-radius:2px;width:32%}
+.donate-goal{font-size:12px;color:rgba(255,255,255,.7);white-space:nowrap}
+.donate-goal strong{color:#fff}
+.donate-btn{font-family:var(--ffm);font-size:10px;letter-spacing:1.5px;background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2);border-radius:5px;padding:5px 12px;text-decoration:none;white-space:nowrap;transition:all .15s}
+.donate-btn:hover{color:#fff;border-color:rgba(255,255,255,.5)}
+.donate-close{background:none;border:none;color:rgba(255,255,255,.35);cursor:pointer;font-size:18px;padding:0;line-height:1;transition:color .15s}
+.donate-close:hover{color:rgba(255,255,255,.7)}
+
+/* ── SECTIONS ── */
+section{padding:72px 80px 72px 72px;border-bottom:1px solid var(--border)}
+.sec-header{display:flex;align-items:baseline;gap:16px;margin-bottom:48px}
+.sec-num{font-family:var(--ffm);font-size:10px;color:var(--ink3);letter-spacing:2px}
+.sec-title{font-size:40px;font-weight:800;letter-spacing:-1.5px;color:var(--ink);line-height:1}
+
+/* ── HERO ── */
 #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:80px 80px 80px 72px;border-bottom:1px solid var(--border);position:relative}
-.hero-eyebrow{font-family:var(--ff-mono);font-size:10px;letter-spacing:3px;color:var(--ink3);text-transform:uppercase;margin-bottom:24px}
-.hero-headline{font-size:clamp(52px,7vw,96px);font-weight:800;letter-spacing:-3px;line-height:0.95;color:var(--ink);max-width:720px}
+.hero-eyebrow{font-family:var(--ffm);font-size:10px;letter-spacing:3px;color:var(--ink3);text-transform:uppercase;margin-bottom:24px}
+.hero-headline{font-size:clamp(52px,7vw,96px);font-weight:800;letter-spacing:-3px;line-height:.95;color:var(--ink);max-width:720px}
 .hero-headline em{font-style:normal;font-weight:900;color:var(--accent)}
 .hero-sub{margin-top:28px;font-size:15px;color:var(--ink2);max-width:440px;line-height:1.65;font-weight:400}
-.hero-offer{margin-top:48px;display:flex;align-items:stretch;gap:0;max-width:520px;border:1px solid var(--border2);border-radius:10px;overflow:hidden;background:var(--surface)}
+.hero-offer{margin-top:48px;display:flex;align-items:stretch;max-width:520px;border:1px solid var(--border2);border-radius:10px;overflow:hidden;background:var(--surface)}
 .offer-price{padding:22px 28px;border-right:1px solid var(--border);flex-shrink:0}
-.offer-price-label{font-family:var(--ff-mono);font-size:9px;letter-spacing:2px;color:var(--ink3);text-transform:uppercase;margin-bottom:4px}
+.offer-price-label{font-family:var(--ffm);font-size:9px;letter-spacing:2px;color:var(--ink3);text-transform:uppercase;margin-bottom:4px}
 .offer-price-val{font-size:32px;font-weight:800;color:var(--ink);letter-spacing:-1px;line-height:1}
 .offer-price-note{font-size:11px;color:var(--ink3);margin-top:3px}
 .offer-info{padding:22px 24px;flex:1;display:flex;flex-direction:column;justify-content:center}
-.offer-services{font-family:var(--ff-mono);font-size:10px;color:var(--ink2);line-height:1.8;letter-spacing:0.3px}
+.offer-services{font-family:var(--ffm);font-size:10px;color:var(--ink2);line-height:1.8}
 .offer-cta{padding:0 20px;display:flex;align-items:center;flex-shrink:0}
-.btn-order{display:inline-block;background:var(--accent);color:#fff;padding:14px 22px;border-radius:7px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:0.3px;white-space:nowrap;transition:all .15s}
+.btn-order{display:inline-block;background:var(--accent);color:#fff;padding:14px 22px;border-radius:7px;text-decoration:none;font-size:13px;font-weight:700;white-space:nowrap;transition:all .15s}
 .btn-order:hover{background:#b03a24;transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,67,42,.25)}
 .urgency-strip{margin-top:16px;max-width:520px;background:var(--accent-pale);border:1px solid #e8c5bc;border-radius:7px;padding:10px 16px;display:flex;align-items:center;gap:12px}
-.urgency-badge{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;background:var(--accent);color:#fff;padding:3px 7px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.urgency-badge{font-family:var(--ffm);font-size:9px;letter-spacing:1.5px;background:var(--accent);color:#fff;padding:3px 7px;border-radius:4px;white-space:nowrap;flex-shrink:0}
 .urgency-text{font-size:12px;color:#7a3020;font-weight:500}
-.hero-stats-row{position:absolute;right:80px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:2px}
+.hero-stats-row{position:absolute;right:80px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column}
 .hstat{padding:18px 24px;text-align:right;border-bottom:1px solid var(--border)}
 .hstat:last-child{border-bottom:none}
 .hstat-val{font-size:36px;font-weight:800;letter-spacing:-2px;color:var(--ink);line-height:1}
-.hstat-label{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;color:var(--ink3);text-transform:uppercase;margin-top:2px}
+.hstat-label{font-family:var(--ffm);font-size:9px;letter-spacing:1.5px;color:var(--ink3);text-transform:uppercase;margin-top:2px}
 
-/* SECTIONS */
-section{padding:72px 80px 72px 72px;border-bottom:1px solid var(--border)}
-.sec-header{display:flex;align-items:baseline;gap:16px;margin-bottom:48px}
-.sec-num{font-family:var(--ff-mono);font-size:10px;color:var(--ink3);letter-spacing:2px}
-.sec-title{font-size:40px;font-weight:800;letter-spacing:-1.5px;color:var(--ink);line-height:1}
-
-/* WORK GRID */
+/* ── WORK GRID ── */
 .work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .work-item{background:var(--surface);overflow:hidden;position:relative;aspect-ratio:4/3}
 .work-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease;background:var(--bg2)}
 .work-item:hover img{transform:scale(1.04)}
 .work-caption{position:absolute;bottom:0;left:0;right:0;padding:12px 14px 14px;background:linear-gradient(transparent,rgba(26,25,23,.7));opacity:0;transition:opacity .2s}
 .work-item:hover .work-caption{opacity:1}
-.work-caption span{font-family:var(--ff-mono);font-size:10px;color:rgba(255,255,255,.85);letter-spacing:1px}
+.work-caption span{font-family:var(--ffm);font-size:10px;color:rgba(255,255,255,.85);letter-spacing:1px}
 .work-item.wide{grid-column:span 2}
 
-/* GAMES */
+/* ── GAMES ── */
 .games-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .game-row{display:flex;align-items:center;gap:24px;background:var(--surface);padding:20px 24px;text-decoration:none;transition:background .15s}
 .game-row:hover{background:var(--bg2)}
 .game-row-img{width:80px;height:54px;object-fit:cover;border-radius:6px;flex-shrink:0;background:var(--bg2)}
 .game-row-info{flex:1}
-.game-row-title{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-0.3px}
+.game-row-title{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
 .game-row-desc{font-size:12px;color:var(--ink3);margin-top:2px;line-height:1.4}
 .game-row-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
-.tag{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;padding:3px 7px;border-radius:4px;text-transform:uppercase;border:1px solid}
+.tag{font-family:var(--ffm);font-size:9px;letter-spacing:1.5px;padding:3px 7px;border-radius:4px;text-transform:uppercase;border:1px solid}
 .tag-sold{color:var(--ink3);border-color:var(--border2);background:var(--bg2)}
 .tag-wip{color:#7a6020;border-color:#e0c96e;background:#fdf8e6}
 .tag-cancelled{color:var(--ink3);border-color:var(--border);background:var(--bg)}
 .game-row-arrow{font-size:14px;color:var(--ink3);transition:transform .15s,color .15s}
 .game-row:hover .game-row-arrow{color:var(--accent);transform:translateX(3px)}
 
-/* HIRE */
+/* ── HIRE ── */
 #hire{background:var(--surface)}
 .hire-top{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-bottom:60px}
 .hire-pitch p{font-size:15px;color:var(--ink2);line-height:1.7;font-weight:400}
@@ -120,8 +131,8 @@ section{padding:72px 80px 72px 72px;border-bottom:1px solid var(--border)}
 .price-row{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--border)}
 .price-row:last-child{border-bottom:none}
 .price-item{font-size:14px;font-weight:600;color:var(--ink)}
-.price-time{font-family:var(--ff-mono);font-size:10px;color:var(--ink3);margin-top:2px}
-.price-amount{font-size:15px;font-weight:700;color:var(--accent);letter-spacing:-0.5px}
+.price-time{font-family:var(--ffm);font-size:10px;color:var(--ink3);margin-top:2px}
+.price-amount{font-size:15px;font-weight:700;color:var(--accent);letter-spacing:-.5px}
 .hire-order-section{background:var(--ink);border-radius:10px;padding:40px 48px;display:flex;justify-content:space-between;align-items:center;gap:32px}
 .hire-order-text{font-size:26px;font-weight:800;letter-spacing:-1px;color:#fff;line-height:1.1}
 .hire-order-text span{color:var(--accent)}
@@ -129,68 +140,178 @@ section{padding:72px 80px 72px 72px;border-bottom:1px solid var(--border)}
 .hire-order-btns{display:flex;gap:12px;flex-shrink:0}
 .btn-ghost-white{display:inline-block;background:transparent;color:rgba(255,255,255,.7);padding:12px 20px;border-radius:7px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid rgba(255,255,255,.2);transition:all .15s}
 .btn-ghost-white:hover{color:#fff;border-color:rgba(255,255,255,.5)}
-
-/* COMMISSIONS */
 .comm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .comm-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:24px;position:relative}
 .comm-score{position:absolute;top:20px;right:22px;font-size:28px;font-weight:800;letter-spacing:-1px;color:var(--ink3)}
 .comm-card:last-child .comm-score{color:var(--accent)}
-.comm-client{font-family:var(--ff-mono);font-size:9px;letter-spacing:2px;color:var(--ink3);text-transform:uppercase;margin-bottom:6px}
-.comm-name{font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;margin-bottom:8px;padding-right:48px}
+.comm-client{font-family:var(--ffm);font-size:9px;letter-spacing:2px;color:var(--ink3);text-transform:uppercase;margin-bottom:6px}
+.comm-name{font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-.3px;margin-bottom:8px;padding-right:48px}
 .comm-desc{font-size:12px;color:var(--ink2);line-height:1.5}
 .comm-meta{display:flex;gap:14px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
-.comm-meta span{font-family:var(--ff-mono);font-size:9px;color:var(--ink3);letter-spacing:0.5px}
+.comm-meta span{font-family:var(--ffm);font-size:9px;color:var(--ink3)}
 
-/* SKILLS */
+/* ── SKILLS ── */
 .skills-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .skill-line{display:flex;align-items:center;gap:16px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:8px}
 .skill-name-text{font-size:13px;font-weight:600;color:var(--ink);min-width:140px}
 .skill-bar-wrap{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
 .skill-bar-fill{height:100%;background:var(--ink);border-radius:2px}
-.skill-lv{font-family:var(--ff-mono);font-size:9px;color:var(--ink3);letter-spacing:1px;text-transform:uppercase;min-width:72px;text-align:right}
+.skill-lv{font-family:var(--ffm);font-size:9px;color:var(--ink3);letter-spacing:1px;text-transform:uppercase;min-width:72px;text-align:right}
 
-/* GROUPS */
+/* ── GROUPS ── */
 .groups-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .group-row{display:flex;align-items:center;justify-content:space-between;gap:24px;background:var(--surface);padding:20px 24px;text-decoration:none;transition:background .15s}
 .group-row:hover{background:var(--bg2)}
-.group-name{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:-0.3px}
+.group-name{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
 .group-desc{font-size:12px;color:var(--ink3);margin-top:2px}
 .group-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
-.group-type{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;color:var(--ink3);text-transform:uppercase}
-.owner-mark{font-family:var(--ff-mono);font-size:9px;background:var(--accent-pale);color:var(--accent);border:1px solid #e8c5bc;border-radius:4px;padding:2px 7px;letter-spacing:1px}
+.group-type{font-family:var(--ffm);font-size:9px;letter-spacing:1.5px;color:var(--ink3);text-transform:uppercase}
+.owner-mark{font-family:var(--ffm);font-size:9px;background:var(--accent-pale);color:var(--accent);border:1px solid #e8c5bc;border-radius:4px;padding:2px 7px}
 .group-arrow{font-size:14px;color:var(--ink3);transition:transform .15s,color .15s}
 .group-row:hover .group-arrow{color:var(--accent);transform:translateX(3px)}
 
-/* LOG */
+/* ── LOG ── */
 .log-entries{display:flex;flex-direction:column;gap:32px}
 .log-entry{display:grid;grid-template-columns:140px 1fr;gap:32px;align-items:start}
-.log-date-val{font-family:var(--ff-mono);font-size:10px;letter-spacing:1.5px;color:var(--ink3);text-transform:uppercase}
+.log-date-val{font-family:var(--ffm);font-size:10px;letter-spacing:1.5px;color:var(--ink3);text-transform:uppercase}
 .log-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);margin-top:8px}
-.log-entry-title{font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;margin-bottom:6px}
+.log-entry-title{font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-.3px;margin-bottom:6px}
 .log-entry-body{font-size:13px;color:var(--ink2);line-height:1.65}
 .log-entry-body ul{padding-left:16px;margin-top:6px}
 .log-entry-body li{margin-bottom:3px}
 
-/* CONTACT */
+/* ── FIND ME ── */
 #contact{background:var(--surface)}
 .find-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .find-card{border:1px solid var(--border);border-radius:10px;padding:24px;text-decoration:none;transition:all .15s;background:var(--bg)}
 .find-card:hover{border-color:var(--border2);background:var(--surface);transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,25,23,.06)}
-.find-platform{font-family:var(--ff-mono);font-size:9px;letter-spacing:2px;color:var(--ink3);text-transform:uppercase;margin-bottom:8px}
-.find-handle{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-0.5px;margin-bottom:6px}
+.find-platform{font-family:var(--ffm);font-size:9px;letter-spacing:2px;color:var(--ink3);text-transform:uppercase;margin-bottom:8px}
+.find-handle{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.5px;margin-bottom:6px}
 .find-desc{font-size:12px;color:var(--ink3);line-height:1.5}
-.find-cta{display:inline-block;margin-top:16px;font-family:var(--ff-mono);font-size:10px;color:var(--accent);letter-spacing:1px}
+.find-cta{display:inline-block;margin-top:16px;font-family:var(--ffm);font-size:10px;color:var(--accent);letter-spacing:1px}
 
-/* FOOTER */
+/* ── FOOTER ── */
 footer{padding:32px 80px 32px 72px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid var(--border)}
-.footer-copy{font-family:var(--ff-mono);font-size:10px;color:var(--ink3);letter-spacing:0.5px}
+.footer-copy{font-family:var(--ffm);font-size:10px;color:var(--ink3)}
 .footer-links{display:flex;gap:20px}
-.footer-link{font-family:var(--ff-mono);font-size:10px;color:var(--ink3);text-decoration:none;letter-spacing:0.5px;transition:color .15s}
+.footer-link{font-family:var(--ffm);font-size:10px;color:var(--ink3);text-decoration:none;transition:color .15s}
 .footer-link:hover{color:var(--accent)}
 
-/* MOBILE */
-#mob-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--surface);border:1px solid var(--border);border-radius:7px;width:38px;height:38px;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer}
+/* ── MOBILE ── */
+#mob-toggle{display:none;position:fixed;top:14px;left:14px;z-index:300;background:var(--surface);border:1px solid var(--border);border-radius:7px;width:38px;height:38px;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer}
 .tb{width:16px;height:1.5px;background:var(--ink);border-radius:1px}
+
+/* ── MODAL OVERLAY ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,25,23,.5);z-index:500;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:14px;border:1px solid var(--border);width:100%;max-width:440px;overflow:hidden}
+.modal-head{padding:24px 28px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.5px}
+.modal-close{background:none;border:none;font-size:20px;color:var(--ink3);cursor:pointer;line-height:1;padding:0;transition:color .15s}
+.modal-close:hover{color:var(--ink)}
+.modal-body{padding:28px}
+.modal-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:24px}
+.modal-tab{flex:1;padding:9px;font-size:13px;font-weight:600;background:var(--bg2);border:none;cursor:pointer;transition:all .15s;color:var(--ink2)}
+.modal-tab.active{background:var(--ink);color:#fff}
+.form-group{margin-bottom:16px}
+.form-label{font-family:var(--ffm);font-size:10px;letter-spacing:1.5px;color:var(--ink3);text-transform:uppercase;display:block;margin-bottom:6px}
+.form-input{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radius:8px;font-family:var(--ff);font-size:14px;color:var(--ink);background:var(--bg);outline:none;transition:border-color .15s}
+.form-input:focus{border-color:var(--accent)}
+.btn-full{width:100%;padding:13px;border-radius:8px;font-family:var(--ff);font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;border:none}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:#b03a24}
+.btn-google{background:var(--bg2);color:var(--ink);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px}
+.btn-google:hover{border-color:var(--border2);background:var(--bg)}
+.divider{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-family:var(--ffm);font-size:10px;color:var(--ink3)}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.modal-msg{font-size:13px;color:var(--ink2);text-align:center;margin-top:12px;min-height:18px}
+.modal-msg.err{color:var(--accent)}
+.modal-msg.ok{color:#2ea84f}
+
+/* ── PANEL PAGES (profile / commissions / chat) ── */
+.panel-overlay{display:none;position:fixed;inset:0;background:rgba(26,25,23,.5);z-index:500;align-items:flex-end;justify-content:flex-end;padding:0}
+.panel-overlay.open{display:flex}
+.panel{background:var(--surface);width:420px;max-width:100vw;height:100vh;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.panel-head{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.panel-title{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.panel-close{background:none;border:none;font-size:20px;color:var(--ink3);cursor:pointer;padding:0;line-height:1}
+.panel-body{flex:1;overflow-y:auto;padding:24px}
+.panel-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);flex-shrink:0}
+.panel-tab{padding:12px 20px;font-size:13px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;color:var(--ink3);cursor:pointer;transition:all .15s;margin-bottom:-1px}
+.panel-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* Profile panel */
+.profile-avatar-wrap{text-align:center;margin-bottom:24px}
+.profile-avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;background:var(--bg2);border:2px solid var(--border)}
+.profile-username{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.5px;margin-top:10px}
+.profile-email{font-size:12px;color:var(--ink3);font-family:var(--ffm);margin-top:2px}
+
+/* Commission status tracker */
+.comm-status-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:12px}
+.comm-status-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.comm-status-desc{font-size:12px;color:var(--ink2);margin-bottom:12px;line-height:1.5}
+.status-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--ffm);font-size:9px;letter-spacing:1.5px;padding:4px 9px;border-radius:4px;text-transform:uppercase;border:1px solid}
+.status-pending{color:#7a6020;border-color:#e0c96e;background:#fdf8e6}
+.status-approved{color:#0f6e56;border-color:#5dcaa5;background:#e1f5ee}
+.status-in_progress{color:#185fa5;border-color:#85b7eb;background:#e6f1fb}
+.status-delivered{color:#2ea84f;border-color:#7ec894;background:#eaf3de}
+.status-cancelled{color:var(--ink3);border-color:var(--border2);background:var(--bg2)}
+.comm-price{font-family:var(--ffm);font-size:11px;color:var(--accent);margin-top:8px}
+.no-items{text-align:center;padding:40px 20px;color:var(--ink3);font-size:13px;line-height:1.6}
+
+/* Comments section */
+#comments{background:var(--bg2)}
+.comment-list{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.comment-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;position:relative}
+.comment-card.pinned{border-color:#e0c96e;background:#fdf8e6}
+.comment-meta-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.comment-avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;background:var(--bg2);border:1px solid var(--border);flex-shrink:0}
+.comment-username{font-size:13px;font-weight:600;color:var(--ink)}
+.comment-date{font-family:var(--ffm);font-size:9px;color:var(--ink3);margin-left:auto}
+.comment-pin{font-family:var(--ffm);font-size:9px;color:#7a6020;margin-left:6px}
+.comment-stars{color:#e0a020;font-size:13px;margin-bottom:6px}
+.comment-text{font-size:14px;color:var(--ink2);line-height:1.6}
+.comment-del{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--ink3);cursor:pointer;font-size:14px;line-height:1;transition:color .15s}
+.comment-del:hover{color:var(--accent)}
+.comment-form{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px}
+.comment-form-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:16px}
+.star-row{display:flex;gap:4px;margin-bottom:14px}
+.star-btn{background:none;border:none;font-size:22px;cursor:pointer;color:var(--border2);transition:color .15s;padding:0}
+.star-btn.on{color:#e0a020}
+.comment-textarea{width:100%;padding:12px 14px;border:1px solid var(--border2);border-radius:8px;font-family:var(--ff);font-size:14px;color:var(--ink);background:var(--bg);resize:vertical;min-height:90px;outline:none;transition:border-color .15s}
+.comment-textarea:focus{border-color:var(--accent)}
+.comment-submit{margin-top:12px;padding:11px 22px;background:var(--accent);color:#fff;border:none;border-radius:7px;font-family:var(--ff);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+.comment-submit:hover{background:#b03a24}
+.login-prompt{font-size:13px;color:var(--ink3);text-align:center;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:10px}
+.login-prompt a{color:var(--accent);cursor:pointer;text-decoration:underline}
+
+/* Chat panel */
+.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+.chat-bubble{max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5}
+.chat-bubble.mine{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-bubble.theirs{background:var(--bg2);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--border)}
+.chat-bubble-meta{font-size:10px;opacity:.6;margin-top:4px;font-family:var(--ffm)}
+.chat-input-row{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0}
+.chat-input{flex:1;padding:10px 14px;border:1px solid var(--border2);border-radius:8px;font-family:var(--ff);font-size:13px;color:var(--ink);background:var(--bg);outline:none;transition:border-color .15s}
+.chat-input:focus{border-color:var(--accent)}
+.chat-send{padding:10px 18px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s;flex-shrink:0}
+.chat-send:hover{background:#b03a24}
+.chat-thread-list{padding:16px}
+.chat-thread{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;cursor:pointer;transition:background .15s;border:1px solid transparent}
+.chat-thread:hover{background:var(--bg2);border-color:var(--border)}
+.chat-thread-avatar{width:36px;height:36px;border-radius:50%;background:var(--bg2);object-fit:cover;flex-shrink:0}
+.chat-thread-name{font-size:13px;font-weight:600;color:var(--ink)}
+.chat-thread-preview{font-size:11px;color:var(--ink3);margin-top:1px}
+.chat-unread{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-left:auto;flex-shrink:0}
+
+/* Admin badge */
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn-admin{font-family:var(--ffm);font-size:9px;letter-spacing:1px;padding:4px 9px;border-radius:4px;border:1px solid var(--border2);background:var(--bg2);color:var(--ink2);cursor:pointer;transition:all .15s}
+.btn-admin:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Fade-in */
+.fi{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.fi.vis{opacity:1;transform:none}
 
 @media(max-width:960px){
   :root{--sidebar-w:0px}
@@ -201,31 +322,123 @@ footer{padding:32px 80px 32px 72px;display:flex;justify-content:space-between;al
   section,#hero{padding:56px 28px}
   footer{padding:28px}
   .hero-stats-row{display:none}
-  .hire-top{grid-template-columns:1fr;gap:36px}
+  .hire-top,.comm-grid,.skills-cols,.find-grid{grid-template-columns:1fr}
   .work-grid{grid-template-columns:1fr 1fr}
   .work-item.wide{grid-column:span 1}
-  .comm-grid{grid-template-columns:1fr}
-  .skills-cols{grid-template-columns:1fr}
-  .find-grid{grid-template-columns:1fr}
   .log-entry{grid-template-columns:1fr;gap:4px}
   .hire-order-section{flex-direction:column;align-items:flex-start;gap:24px}
   .hero-offer{flex-direction:column}
   .offer-cta{padding:0 22px 20px}
+  .panel{width:100vw}
 }
-@media(max-width:600px){
-  .work-grid{grid-template-columns:1fr}
-}
-
-.fi{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
-.fi.vis{opacity:1;transform:none}
+@media(max-width:600px){.work-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
+<!-- MOBILE TOGGLE -->
 <button id="mob-toggle" onclick="toggleSb()" aria-label="Menu">
   <div class="tb"></div><div class="tb"></div><div class="tb"></div>
 </button>
 
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="auth-modal-title">Sign in</span>
+      <button class="modal-close" onclick="closeModal('auth-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-tabs">
+        <button class="modal-tab active" onclick="switchTab('login')">Sign in</button>
+        <button class="modal-tab" onclick="switchTab('signup')">Sign up</button>
+      </div>
+      <button class="btn-full btn-google" onclick="signInGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
+        Continue with Google
+      </button>
+      <div class="divider">or</div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="auth-email" placeholder="you@email.com"/>
+      </div>
+      <div class="form-group" id="auth-username-wrap" style="display:none">
+        <label class="form-label">Username</label>
+        <input class="form-input" type="text" id="auth-username" placeholder="coolname123"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="auth-password" placeholder="••••••••"/>
+      </div>
+      <button class="btn-full btn-accent" id="auth-submit-btn" onclick="submitAuth()">Sign in</button>
+      <p class="modal-msg" id="auth-msg"></p>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE PANEL -->
+<div class="panel-overlay" id="profile-panel">
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">My Profile</span>
+      <button class="panel-close" onclick="closePanel('profile-panel')">&times;</button>
+    </div>
+    <div class="panel-tabs">
+      <button class="panel-tab active" onclick="switchPanelTab(this,'profile-tab')">Profile</button>
+      <button class="panel-tab" onclick="switchPanelTab(this,'commissions-tab')">My Commissions</button>
+      <button class="panel-tab" onclick="switchPanelTab(this,'chat-tab-wrapper');loadChat()">Messages</button>
+    </div>
+
+    <!-- Profile tab -->
+    <div id="profile-tab" class="panel-body">
+      <div class="profile-avatar-wrap">
+        <img id="panel-avatar" class="profile-avatar" src="" alt="avatar"/>
+        <div class="profile-username" id="panel-username"></div>
+        <div class="profile-email" id="panel-email"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input class="form-input" type="text" id="edit-username" placeholder="Your username"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Bio</label>
+        <textarea class="comment-textarea" id="edit-bio" placeholder="Tell Bozino a bit about yourself..." style="min-height:70px"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Avatar URL</label>
+        <input class="form-input" type="text" id="edit-avatar" placeholder="https://..."/>
+      </div>
+      <button class="btn-full btn-accent" onclick="saveProfile()" style="margin-bottom:12px">Save changes</button>
+      <button class="btn-full" onclick="signOut()" style="padding:12px;border-radius:8px;font-family:var(--ff);font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--bg2);color:var(--ink2)">Sign out</button>
+      <p class="modal-msg" id="profile-msg" style="margin-top:10px"></p>
+    </div>
+
+    <!-- Commissions tab -->
+    <div id="commissions-tab" class="panel-body" style="display:none">
+      <div id="comm-list-inner"><div class="no-items">Loading your commissions...</div></div>
+    </div>
+
+    <!-- Chat tab -->
+    <div id="chat-tab-wrapper" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div id="chat-thread-view" class="chat-thread-list">
+        <div class="no-items">Loading messages...</div>
+      </div>
+      <div id="chat-convo-view" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <button onclick="backToThreads()" style="background:none;border:none;color:var(--ink2);cursor:pointer;font-size:20px;padding:0;line-height:1">&larr;</button>
+          <span id="chat-convo-name" style="font-size:14px;font-weight:700;color:var(--ink)"></span>
+        </div>
+        <div class="chat-messages" id="chat-messages-list"></div>
+        <div class="chat-input-row">
+          <input class="chat-input" type="text" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()"/>
+          <button class="chat-send" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
 <nav id="sidebar">
   <div class="sb-logo">
     <div class="sb-logo-name">Bozino<span>.</span></div>
@@ -233,32 +446,51 @@ footer{padding:32px 80px 32px 72px;display:flex;justify-content:space-between;al
   </div>
   <div class="sb-nav">
     <div class="sb-label">Pages</div>
-    <a href="#hero"    class="sb-link active" onclick="setActive(this)"><div class="sb-link-dot"></div>Home</a>
-    <a href="#work"    class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Work</a>
-    <a href="#games"   class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Games</a>
-    <a href="#hire"    class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Hire Me</a>
-    <a href="#skills"  class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Skills</a>
-    <a href="#groups"  class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Groups</a>
-    <a href="#log"     class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Updates</a>
-    <a href="#contact" class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Find Me</a>
+    <a href="#hero"     class="sb-link active" onclick="setActive(this)"><div class="sb-link-dot"></div>Home</a>
+    <a href="#work"     class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Work</a>
+    <a href="#games"    class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Games</a>
+    <a href="#hire"     class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Hire Me</a>
+    <a href="#comments" class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Reviews</a>
+    <a href="#skills"   class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Skills</a>
+    <a href="#groups"   class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Groups</a>
+    <a href="#log"      class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Updates</a>
+    <a href="#contact"  class="sb-link"        onclick="setActive(this)"><div class="sb-link-dot"></div>Find Me</a>
   </div>
   <div class="sb-footer">
     <div class="sb-socials">
-      <a href="https://www.youtube.com/@BOZINOZI"                    target="_blank" class="sb-social-link">YouTube &rarr;</a>
-      <a href="https://www.roblox.com/users/3517890678/profile"      target="_blank" class="sb-social-link">Roblox &rarr;</a>
-      <a href="https://discord.gg/DaTngShGRR"                        target="_blank" class="sb-social-link">Discord &rarr;</a>
+      <a href="https://www.youtube.com/@BOZINOZI"               target="_blank" class="sb-social-link">YouTube &rarr;</a>
+      <a href="https://www.roblox.com/users/3517890678/profile" target="_blank" class="sb-social-link">Roblox &rarr;</a>
+      <a href="https://discord.gg/DaTngShGRR"                   target="_blank" class="sb-social-link">Discord &rarr;</a>
     </div>
+    <button id="auth-btn" onclick="handleAuthBtn()">
+      <img id="auth-avatar" src="" alt=""/>
+      <span id="auth-btn-text">Sign in / Sign up</span>
+    </button>
   </div>
 </nav>
 
+<!-- MAIN -->
 <div id="main">
 
+  <!-- DONATION BAR -->
+  <div id="donate-bar">
+    <div class="donate-left">
+      <span class="donate-label">Goal</span>
+      <div class="donate-track"><div class="donate-fill"></div></div>
+      <span class="donate-goal"><strong>$32</strong> of $100 raised &mdash; help me hit my goal!</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="YOUR_DONATION_LINK_HERE" target="_blank" class="donate-btn">Donate</a>
+      <button class="donate-close" onclick="document.getElementById('donate-bar').style.display='none'">&times;</button>
+    </div>
+  </div>
+
+  <!-- HERO -->
   <section id="hero">
     <div class="hero-eyebrow">Roblox Developer &amp; Map Builder</div>
     <h1 class="hero-headline">I build <em>Roblox</em><br/>games people<br/>actually play.</h1>
     <p class="hero-sub">Maps, lobbies, UI, full games. Commissions open &mdash; spots are limited.</p>
-    <p style="margin-top:14px;font-size:13px;color:var(--ink3);font-style:italic;">"*All sales are final*"</p>
-
+    <p style="margin-top:14px;font-size:13px;color:var(--ink3);font-style:italic;">"Not all heroes wear capes &mdash; but I do."</p>
     <div class="hero-offer fi">
       <div class="offer-price">
         <div class="offer-price-label">Starting at</div>
@@ -269,190 +501,86 @@ footer{padding:32px 80px 32px 72px;display:flex;justify-content:space-between;al
         <div class="offer-services">Maps &amp; lobbies<br/>UI / UX design<br/>Full games<br/>Asset packs</div>
       </div>
       <div class="offer-cta">
-        <a href="https://forms.gle/RnkuhUxUCs5CH3xE7" target="_blank" class="btn-order">Request a Commission</a>
+        <a href="YOUR_GOOGLE_FORM_LINK_HERE" target="_blank" class="btn-order">Request a Commission</a>
       </div>
     </div>
-
     <div class="urgency-strip fi" style="transition-delay:.1s">
       <div class="urgency-badge">Limited</div>
-      <div class="urgency-text">Next 3 orders get 10% off &mdash; mention this when you order. [0/3]</div>
+      <div class="urgency-text">Next 3 orders get 10% off &mdash; mention this when you order.</div>
     </div>
-
     <div class="hero-stats-row">
-      <div class="hstat"><div class="hstat-val">20+</div><div class="hstat-label">Models/Builds shipped</div></div>
+      <div class="hstat"><div class="hstat-val">5+</div><div class="hstat-label">Games shipped</div></div>
       <div class="hstat"><div class="hstat-val">28K</div><div class="hstat-label">Community</div></div>
-      <div class="hstat"><div class="hstat-val">7+</div><div class="hstat-label">Commissions</div></div>
+      <div class="hstat"><div class="hstat-val">3+</div><div class="hstat-label">Commissions</div></div>
     </div>
   </section>
 
+  <!-- WORK -->
   <section id="work">
-  <div class="sec-header fi">
-    <span class="sec-num">01</span>
-    <h2 class="sec-title">Work</h2>
-  </div>
-  <div class="work-grid fi">
-    <div class="work-item wide">
-      <img src="https://lh3.googleusercontent.com/u/0/d/1qOAnqTFiLJTU6FT1ZPOJpjHFTt1gK7Kn" alt="Squid Game Lobby commission" onerror="this.closest('.work-item').style.display='none'"/>
-      <div class="work-caption"><span>Chain-Saw Man Battlegrounds Map</span></div>
-    </div>
-
-    <div class="work-item">
-      <img src="https://lh3.googleusercontent.com/u/0/d/1wjdKJOEJZMd2EP0y8YvD4FRwSL5nLXiQ" alt="Showcase 1" onerror="this.closest('.work-item').style.display='none'"/>
-      <div class="work-caption"><span>Environment build</span></div>
-    </div>
-
-    <div class="work-item">
-      <img src="https://lh3.googleusercontent.com/u/0/d/1ebIED_q3INGVT4T9--GAI0vC3VV-8_U6" alt="Showcase 2" onerror="this.closest('.work-item').style.display='none'"/>
-      <div class="work-caption"><span>Map detail</span></div>
-    </div>
-
-        <div class="work-item">
-      <img src="https://lh3.googleusercontent.com/u/0/d/17yMVoyJr_N4Ox-Rndq9gfY2Y4VZQxsEH" alt="Showcase 3" onerror="this.closest('.work-item').style.display='none'"/>
-      <div class="work-caption"><span>Factoy build (Assets from Poppy Playtime)</span></div>
-    </div>
-
-    <div class="work-item">
-      <img src="https://lh3.googleusercontent.com/u/0/d/12xpdhS48mxaVPI8XhQn77Jt0mPvbOXK9" alt="Showcase 4" onerror="this.closest('.work-item').style.display='none'"/>
-      <div class="work-caption"><span>Map detail</span></div>
-    </div>
-
-        <div class="work-item">
-      <img src="https://lh3.googleusercontent.com/u/0/d/11H2UJNEI_3KWtoQsnKycuRjro749KSiC" alt="Showcase 5" onerror="this.closest('.work-item').style.display='none'"/>
-      <div class="work-caption"><span>Battlegrounds map detail</span></div>
-    </div>
-
-    </div>
-</section>
-
-  <section id="games">
-    <div class="sec-header fi">
-      <span class="sec-num">02</span>
-      <h2 class="sec-title">Games</h2>
-    </div>
-    <div class="games-list fi">
-      <a href="https://www.roblox.com/games/97361312667250/Steal-a-Block" target="_blank" class="game-row">
-        <img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRkW3To2oUtRN5bITnqkcAbJ4UxAqqHLw0qrDyBnqXPcJqwSVHRNg88nEwXuoThKn2Y_B9xN_idFoaPHOba7mMZRFbQELMX_MKW67baXVJr0jOa3CukzkxSGVWrp4DhjuoibAPSodJ3zyaFdKoqgP6dSxOpL7nd-iefuitVGTLMtJhi-67SApk9PIUF1DuDZTuLp3_upisZroKUbe_h0I9kdSATNBPWcOVLg2k=w1280" alt="Steal a Block" onerror="this.style.display='none'"/>
-        <div class="game-row-info">
-          <div class="game-row-title">Steal a Block</div>
-          <div class="game-row-desc">Buy blocks, make cash, steal from others. Rebirth system, VR support.</div>
-        </div>
-        <div class="game-row-right"><span class="tag tag-sold">Sold 2025</span><span class="game-row-arrow">&rarr;</span></div>
-      </a>
-      <a href="https://www.roblox.com/games/86955023859955/Stud-Miners" target="_blank" class="game-row">
-        <img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSYyh9pt-VlSXRc5fWrkKCr3G-5ID3A5LFk6snM_4uWQlCb1cGRBujHfrNJecOCXWtDpHtvBylo8GY7TbCE3_nr_QnA9YMiDhgRh9--tSs4h-a__rzQncksx3T5_LVb-GDdzE3AtxCLWvP2Vn54LQLotvatbUdoAU9YD9Nf7LGnqBQkPCcKWHlqOht69JmWmbif0sxdqQNaJEnMWdVzq8IwFTFiyYwbq6kIa_0=w1280" alt="Stud Miners" onerror="this.style.display='none'"/>
-        <div class="game-row-info">
-          <div class="game-row-title">Stud Miners!</div>
-          <div class="game-row-desc">Dig to earth's core. Discover ores, find tools, become the richest.</div>
-        </div>
-        <div class="game-row-right"><span class="tag tag-wip">In dev</span><span class="game-row-arrow">&rarr;</span></div>
-      </a>
-      <a href="https://www.roblox.com/games/93585929907013/OLD-Untitled-Battlegrounds" target="_blank" class="game-row">
-        <img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SS1_MnBn0jetHH_zKI48Xsuua7z5SvQ1pZbdfenAbf77U3tqC3amMqR5FWSw3eRNrFvIKH7I5lSlvN_vXa2KkyOPkWlqbUmLba1xS4WD-5LCigtSJ7bG1bOBu1J6owEveJawjUoJYF5LE9H49kJuD1yT4Ln7yMWIAsBqewhOlcmB_9eb9ROubgQr16Eq1K617vwHp__KpHwQeMjufvX1Dm5Oyl1tM7QbywK=w1280" alt="Untitled Battlegrounds" onerror="this.style.display='none'"/>
-        <div class="game-row-info">
-          <div class="game-row-title">Untitled Battlegrounds</div>
-          <div class="game-row-desc">Classic and modern era movesets. 2011&ndash;2020 Roblox themed.</div>
-        </div>
-        <div class="game-row-right"><span class="tag tag-sold">Sold 2025</span><span class="game-row-arrow">&rarr;</span></div>
-      </a>
-      <a href="https://www.roblox.com/games/85862577329248/Squid-Game-Revolution" target="_blank" class="game-row">
-        <img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSMibrBZabg-gnTnsbESaBtK5s5ELfIm0UH5h0iwIZxbJy0l-8XxhHesmDS04b-1P3iSZUnJb3qhCti6LTWeJ9vNs_8w9uGTBDY4xxgGCZxS1Q6oUWwyJiADt2Ih4seEl-jHU6HsHmLlL2ytdJfdxjcG1FAD_4rSu59OU_t_kqbvLcr5AOB6dMmnSFWx80jpResM42d5b45TylGA6FlYDFU=w1280" alt="Squid Game Revolution" onerror="this.style.display='none'"/>
-        <div class="game-row-info">
-          <div class="game-row-title">Squid Game: Revolution</div>
-          <div class="game-row-desc">Teams of 2, last team standing. Post-Season 2 concept.</div>
-        </div>
-        <div class="game-row-right"><span class="tag tag-sold">Sold 2025</span><span class="game-row-arrow">&rarr;</span></div>
-      </a>
-      <a href="https://www.roblox.com/games/16700561795/FNaF-World-Lost-in-Time-Fnaf-World-RPG" target="_blank" class="game-row">
-        <img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0STpJm0Ass2Rg7-LaeTsOgD1JQmrjiQK6CrlfVar9X1kMp3TIoQ5weJs-JqQezQPQOa8-wCxa5Cg2ODQqA1WbEKUgNdfd_vHL6VDXp8ykvqJ1TiXdwWKzcIwQOd4OYUXfSkofcaKvFmcd1rnYkr8t6WBx0vo1nkRR0Bt7ZXxYOwzYresfejaxhECWNzf4tBV-O9TzNj0ZVOyq2QG-LjUx_R95VY8Mrjpc_S0Fe8=w1280" alt="FNaF World Lost in Time" onerror="this.style.display='none'"/>
-        <div class="game-row-info">
-          <div class="game-row-title">FNaF World: Lost in Time</div>
-          <div class="game-row-desc">FNaF World RPG. Cancelled 2023&ndash;2024.</div>
-        </div>
-        <div class="game-row-right"><span class="tag tag-cancelled">Cancelled</span><span class="game-row-arrow">&rarr;</span></div>
-      </a>
-      <a href="https://www.roblox.com/games/72908976658782/WIP-Fazstars-Rebranded-Retold-Roleplay" target="_blank" class="game-row">
-        <img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSZhRzao4dKg36kTwouZocEDx4XikVS386VYkQF76UNZwhb2z1eCCMLASMQYnXCDAre-0EYrvSX6FBczoMgpE9jUSekKaWut1Ef6KSQyq3qXDhqdFP2KSYSlNaVb7iqwKFdmzWcZ3uIeycJyXbbe5Tzw2fsRbsc0Em-ey7-vMA5SXrftOHasNYITk2FqdNj-u6vELT2cK1EN9xP6-quldnI34rcURxaFCKqyok=w1280" alt="Fazstar's Rebranded" onerror="this.style.display='none'"/>
-        <div class="game-row-info">
-          <div class="game-row-title">Fazstar's Rebranded &amp; Retold</div>
-          <div class="game-row-desc">Animatronic roleplay with mini-games and props. Cancelled 2025.</div>
-        </div>
-        <div class="game-row-right"><span class="tag tag-cancelled">Cancelled</span><span class="game-row-arrow">&rarr;</span></div>
-      </a>
+    <div class="sec-header fi"><span class="sec-num">01</span><h2 class="sec-title">Work</h2></div>
+    <div class="work-grid fi">
+      <div class="work-item wide"><img src="https://lh3.googleusercontent.com/sitesv/APaQ0SQnEvdOliqRviVa8lj61B1UNkYj8TtYaRI-GtVFKATxO9bDyryFkVTtDWRJ3dfDLTD51I_-6BzkEztlwDOfnlBv--K0xe_iO8L76M_eyaB9cG1O_4OGXaTIuT711-kgxBfuEcWoTX5dbIXnevqadpII1P-bRyhfrUnIW4nsyUUGATnpKnVsr8Koj5aTCoJ7BG43Znyl9gBVajdfLSDILQHQzMtqQiTPc_Ri4Rg=w1280" alt="Squid Game Lobby" onerror="this.closest('.work-item').style.display='none'"/><div class="work-caption"><span>Squid Game Lobby &mdash; Commission</span></div></div>
+      <div class="work-item"><img src="https://lh3.googleusercontent.com/sitesv/APaQ0SQPGS3zxlM32IVWO5Jq4oJZG93QVBg8AMS62q8xrH7J7pzkG14C6q2hgmA5Vl58Rl0wOYaqwkmGotw4af1hnfO8ThYzpNwY544vv2uixWYozK-P37L_9RIoox163sAPlJ011uLZB_XxPSBf7TyMBmomipk0mqm7T7YBpeIHvz67opFkJ-jMVBQsTzhLKhDSERdcnHAq0tu0aYoLyHIEHPkBaN3jHJghFuVHY64=w1280" alt="Showcase 1" onerror="this.closest('.work-item').style.display='none'"/><div class="work-caption"><span>Environment build</span></div></div>
+      <div class="work-item"><img src="https://lh3.googleusercontent.com/sitesv/APaQ0SSRRo52eHbpzGbPqG10g_F47Yy-cskv_z6Ow79SyHq36XKqs2N-dwXZWq_srTE2ZrrtZxkfZnGhVkOWkyB5RW5nCmiK5ARsXkQYbx19jEvMKjpfjwrd4oT86VL8CwRyqGRtW5tFpyQpep4VDyOkESz8NkomLSpLbMrYA0EITwPVQ4buY2GJ1Md9rJSclQqLq4c9TF50zRC104qWrWakuSbEyx3hCuvj8asO8Ec=w1280" alt="Showcase 2" onerror="this.closest('.work-item').style.display='none'"/><div class="work-caption"><span>Map detail</span></div></div>
+      <div class="work-item"><img src="https://lh3.googleusercontent.com/sitesv/APaQ0SQw96ZOVe9EYom-nk4vYuGvaHLsEgK9hlPLOaKgy_5n7_S6UbjG-wyIh7uBQLKSWkNoG8DB0FAWa6mqzghze6i4fcj_yTS3LbT1NaTlVWqRNTetWqGzAG9gTwxKd4qaB76eiDuX4UZCs9lXxcb-f_5PM3yLjkP97h8h5jux9UAHsZ_SlOzOpedDtO7wPOYMK0Zi_n4KUgpBNRmDF_ontPspgNeBgkm_z85B3Ck=w1280" alt="Build work" onerror="this.closest('.work-item').style.display='none'"/><div class="work-caption"><span>Build work</span></div></div>
+      <div class="work-item"><img src="https://lh3.googleusercontent.com/sitesv/APaQ0SSzPg3JrhlQccKNbyQ814wV3qm9Tmy50NBALFsZzBXinfrju-DrXNZs6wITh6rZr2NHSIXkStGpkRoh6S7hbxnsBP7T7qm26tOgXpPSXIaHv4JwHqxlQ097ygImaZ6ATjBayoQb2N3BBdvs7CHvKQLelpZxxgVWgZuO4ck6Lvwx6nSo-rTXVFwGb3_V5rWm1TDIxxMxmEkPUnHfab6rsldW-EY7WFgu4CHN0g0=w1280" alt="Plant Pack" onerror="this.closest('.work-item').style.display='none'"/><div class="work-caption"><span>Plant pack &mdash; Commission</span></div></div>
+      <div class="work-item"><img src="https://lh3.googleusercontent.com/sitesv/APaQ0SQwHFWEvJq-1SeLstfMbMk7aPyE1P-9mHLFokxAymzfQowDBbzqUUTgRV6ZcZ_t4YmMCT7EoMzMAUoWZVW_VgRHd91Q0JcH5ZuuFAaYmKjmMsgT7hxpPIs278u4oYwUeuOXR_nf-nF4RD2fpAkv2m0V9lQq64aQBNtIKMx30jDdAfdwJ5KgduzoqtEM2hFpW0PMx9JiHsh6BdjG6JMfBbqy1mzQ-EBEuyk29=w1280" alt="Build detail" onerror="this.closest('.work-item').style.display='none'"/><div class="work-caption"><span>Build detail</span></div></div>
     </div>
   </section>
 
-  <section id="hire">
-    <div class="sec-header fi">
-      <span class="sec-num">03</span>
-      <h2 class="sec-title">Hire Me</h2>
+  <!-- GAMES -->
+  <section id="games">
+    <div class="sec-header fi"><span class="sec-num">02</span><h2 class="sec-title">Games</h2></div>
+    <div class="games-list fi">
+      <a href="https://www.roblox.com/games/97361312667250/Steal-a-Block" target="_blank" class="game-row"><img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SRkW3To2oUtRN5bITnqkcAbJ4UxAqqHLw0qrDyBnqXPcJqwSVHRNg88nEwXuoThKn2Y_B9xN_idFoaPHOba7mMZRFbQELMX_MKW67baXVJr0jOa3CukzkxSGVWrp4DhjuoibAPSodJ3zyaFdKoqgP6dSxOpL7nd-iefuitVGTLMtJhi-67SApk9PIUF1DuDZTuLp3_upisZroKUbe_h0I9kdSATNBPWcOVLg2k=w1280" alt="" onerror="this.style.display='none'"/><div class="game-row-info"><div class="game-row-title">Steal a Block</div><div class="game-row-desc">Buy blocks, make cash, steal from others. Rebirth system, VR support.</div></div><div class="game-row-right"><span class="tag tag-sold">Sold 2025</span><span class="game-row-arrow">&rarr;</span></div></a>
+      <a href="https://www.roblox.com/games/86955023859955/Stud-Miners" target="_blank" class="game-row"><img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSYyh9pt-VlSXRc5fWrkKCr3G-5ID3A5LFk6snM_4uWQlCb1cGRBujHfrNJecOCXWtDpHtvBylo8GY7TbCE3_nr_QnA9YMiDhgRh9--tSs4h-a__rzQncksx3T5_LVb-GDdzE3AtxCLWvP2Vn54LQLotvatbUdoAU9YD9Nf7LGnqBQkPCcKWHlqOht69JmWmbif0sxdqQNaJEnMWdVzq8IwFTFiyYwbq6kIa_0=w1280" alt="" onerror="this.style.display='none'"/><div class="game-row-info"><div class="game-row-title">Stud Miners!</div><div class="game-row-desc">Dig to earth's core. Discover ores, find tools, become the richest.</div></div><div class="game-row-right"><span class="tag tag-wip">In dev</span><span class="game-row-arrow">&rarr;</span></div></a>
+      <a href="https://www.roblox.com/games/93585929907013/OLD-Untitled-Battlegrounds" target="_blank" class="game-row"><img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SS1_MnBn0jetHH_zKI48Xsuua7z5SvQ1pZbdfenAbf77U3tqC3amMqR5FWSw3eRNrFvIKH7I5lSlvN_vXa2KkyOPkWlqbUmLba1xS4WD-5LCigtSJ7bG1bOBu1J6owEveJawjUoJYF5LE9H49kJuD1yT4Ln7yMWIAsBqewhOlcmB_9eb9ROubgQr16Eq1K617vwHp__KpHwQeMjufvX1Dm5Oyl1tM7QbywK=w1280" alt="" onerror="this.style.display='none'"/><div class="game-row-info"><div class="game-row-title">Untitled Battlegrounds</div><div class="game-row-desc">Classic and modern era movesets. 2011&ndash;2020 Roblox themed.</div></div><div class="game-row-right"><span class="tag tag-sold">Sold 2025</span><span class="game-row-arrow">&rarr;</span></div></a>
+      <a href="https://www.roblox.com/games/85862577329248/Squid-Game-Revolution" target="_blank" class="game-row"><img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSMibrBZabg-gnTnsbESaBtK5s5ELfIm0UH5h0iwIZxbJy0l-8XxhHesmDS04b-1P3iSZUnJb3qhCti6LTWeJ9vNs_8w9uGTBDY4xxgGCZxS1Q6oUWwyJiADt2Ih4seEl-jHU6HsHmLlL2ytdJfdxjcG1FAD_4rSu59OU_t_kqbvLcr5AOB6dMmnSFWx80jpResM42d5b45TylGA6FlYDFU=w1280" alt="" onerror="this.style.display='none'"/><div class="game-row-info"><div class="game-row-title">Squid Game: Revolution</div><div class="game-row-desc">Teams of 2, last team standing. Post-Season 2 concept.</div></div><div class="game-row-right"><span class="tag tag-sold">Sold 2025</span><span class="game-row-arrow">&rarr;</span></div></a>
+      <a href="https://www.roblox.com/games/16700561795/FNaF-World-Lost-in-Time-Fnaf-World-RPG" target="_blank" class="game-row"><img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0STpJm0Ass2Rg7-LaeTsOgD1JQmrjiQK6CrlfVar9X1kMp3TIoQ5weJs-JqQezQPQOa8-wCxa5Cg2ODQqA1WbEKUgNdfd_vHL6VDXp8ykvqJ1TiXdwWKzcIwQOd4OYUXfSkofcaKvFmcd1rnYkr8t6WBx0vo1nkRR0Bt7ZXxYOwzYresfejaxhECWNzf4tBV-O9TzNj0ZVOyq2QG-LjUx_R95VY8Mrjpc_S0Fe8=w1280" alt="" onerror="this.style.display='none'"/><div class="game-row-info"><div class="game-row-title">FNaF World: Lost in Time</div><div class="game-row-desc">FNaF World RPG. Cancelled 2023&ndash;2024.</div></div><div class="game-row-right"><span class="tag tag-cancelled">Cancelled</span><span class="game-row-arrow">&rarr;</span></div></a>
+      <a href="https://www.roblox.com/games/72908976658782/WIP-Fazstars-Rebranded-Retold-Roleplay" target="_blank" class="game-row"><img class="game-row-img" src="https://lh3.googleusercontent.com/sitesv/APaQ0SSZhRzao4dKg36kTwouZocEDx4XikVS386VYkQF76UNZwhb2z1eCCMLASMQYnXCDAre-0EYrvSX6FBczoMgpE9jUSekKaWut1Ef6KSQyq3qXDhqdFP2KSYSlNaVb7iqwKFdmzWcZ3uIeycJyXbbe5Tzw2fsRbsc0Em-ey7-vMA5SXrftOHasNYITk2FqdNj-u6vELT2cK1EN9xP6-quldnI34rcURxaFCKqyok=w1280" alt="" onerror="this.style.display='none'"/><div class="game-row-info"><div class="game-row-title">Fazstar's Rebranded &amp; Retold</div><div class="game-row-desc">Animatronic roleplay with mini-games and props. Cancelled 2025.</div></div><div class="game-row-right"><span class="tag tag-cancelled">Cancelled</span><span class="game-row-arrow">&rarr;</span></div></a>
     </div>
+  </section>
+
+  <!-- HIRE -->
+  <section id="hire">
+    <div class="sec-header fi"><span class="sec-num">03</span><h2 class="sec-title">Hire Me</h2></div>
     <div class="hire-top fi">
       <div class="hire-pitch">
         <p>I build maps, lobbies, UI, asset packs, and full games for Roblox. Owner of <strong>Lit Games!</strong> &mdash; part of The Fazbear Workshop community with 28,000+ members.</p>
-        <p>Commissions are <strong>currently open</strong>. Reach me on Discord to get in the queue before spots fill.</p>
+        <p>Commissions are <strong>currently open</strong>. Fill out the form and I'll email you back.</p>
         <blockquote>"Not all heroes wear capes &mdash; but I do."</blockquote>
       </div>
       <div class="price-table">
-        <div class="price-row">
-          <div><div class="price-item">Asset Pack</div><div class="price-time">Approx. 30 min</div></div>
-          <div class="price-amount">from $5</div>
-        </div>
-        <div class="price-row">
-          <div><div class="price-item">Lobby / Map</div><div class="price-time">Approx. 2 hrs</div></div>
-          <div class="price-amount">from $15</div>
-        </div>
-        <div class="price-row">
-          <div><div class="price-item">Map Revamp</div><div class="price-time">Approx. 5 hrs</div></div>
-          <div class="price-amount">from $30</div>
-        </div>
-        <div class="price-row">
-          <div><div class="price-item">Full Game</div><div class="price-time">Varies by scope</div></div>
-          <div class="price-amount">Quote on request</div>
-        </div>
+        <div class="price-row"><div><div class="price-item">Asset Pack</div><div class="price-time">Approx. 30 min</div></div><div class="price-amount">from $5</div></div>
+        <div class="price-row"><div><div class="price-item">Lobby / Map</div><div class="price-time">Approx. 2 hrs</div></div><div class="price-amount">from $15</div></div>
+        <div class="price-row"><div><div class="price-item">Map Revamp</div><div class="price-time">Approx. 5 hrs</div></div><div class="price-amount">from $30</div></div>
+        <div class="price-row"><div><div class="price-item">Full Game</div><div class="price-time">Varies by scope</div></div><div class="price-amount">Quote on request</div></div>
       </div>
     </div>
-
     <div class="comm-grid fi" style="margin-bottom:40px">
-      <div class="comm-card">
-        <div class="comm-score">8.5</div>
-        <div class="comm-client">Client: Frexzy</div>
-        <div class="comm-name">Squid Game Lobby</div>
-        <div class="comm-desc">Complete Squid Game themed lobby built from scratch.</div>
-        <div class="comm-meta"><span>2 hrs</span><span>June 19, 2025</span></div>
-      </div>
-      <div class="comm-card">
-        <div class="comm-score">8.5</div>
-        <div class="comm-client">Client: MrLuffyTheGamer</div>
-        <div class="comm-name">Plant Pack</div>
-        <div class="comm-desc">Custom plant asset pack for a Roblox game.</div>
-        <div class="comm-meta"><span>30 min</span><span>June 24, 2025</span></div>
-      </div>
-      <div class="comm-card">
-        <div class="comm-score">9.0</div>
-        <div class="comm-client">Client: DaSwaggyTurdle</div>
-        <div class="comm-name">Squid Game Map Revamp</div>
-        <div class="comm-desc">Full map revamp &mdash; lobby redesign, icons, visual overhaul.</div>
-        <div class="comm-meta"><span>5 hrs</span><span>June 26, 2025</span></div>
-      </div>
+      <div class="comm-card"><div class="comm-score">8.5</div><div class="comm-client">Client: Frexzy</div><div class="comm-name">Squid Game Lobby</div><div class="comm-desc">Complete Squid Game themed lobby built from scratch.</div><div class="comm-meta"><span>2 hrs</span><span>June 19, 2025</span></div></div>
+      <div class="comm-card"><div class="comm-score">8.5</div><div class="comm-client">Client: MrLuffyTheGamer</div><div class="comm-name">Plant Pack</div><div class="comm-desc">Custom plant asset pack for a Roblox game.</div><div class="comm-meta"><span>30 min</span><span>June 24, 2025</span></div></div>
+      <div class="comm-card"><div class="comm-score">9.0</div><div class="comm-client">Client: DaSwaggyTurdle</div><div class="comm-name">Squid Game Map Revamp</div><div class="comm-desc">Full map revamp &mdash; lobby redesign, icons, visual overhaul.</div><div class="comm-meta"><span>5 hrs</span><span>June 26, 2025</span></div></div>
     </div>
-
     <div class="hire-order-section fi">
-      <div class="hire-order-text">
-        Ready to build<br/><span>something?</span>
-        <p>Fill out the form &mdash; I'll email you back if I'm taking it on.</p>
-      </div>
+      <div class="hire-order-text">Ready to build<br/><span>something?</span><p>Fill out the form &mdash; I'll email you back if I'm taking it on.</p></div>
       <div class="hire-order-btns">
-        <a href="https://forms.gle/RnkuhUxUCs5CH3xE7" target="_blank" class="btn-order">Request a Commission</a>
+        <a href="YOUR_GOOGLE_FORM_LINK_HERE" target="_blank" class="btn-order">Request a Commission</a>
         <a href="https://www.roblox.com/users/3517890678/profile" target="_blank" class="btn-ghost-white">Roblox Profile</a>
       </div>
     </div>
   </section>
 
+  <!-- COMMENTS / REVIEWS -->
+  <section id="comments">
+    <div class="sec-header fi"><span class="sec-num">04</span><h2 class="sec-title">Reviews</h2></div>
+    <div id="comment-list" class="comment-list fi"></div>
+    <div id="comment-form-wrap" class="fi"></div>
+  </section>
+
+  <!-- SKILLS -->
   <section id="skills">
-    <div class="sec-header fi">
-      <span class="sec-num">04</span>
-      <h2 class="sec-title">Skills</h2>
-    </div>
+    <div class="sec-header fi"><span class="sec-num">05</span><h2 class="sec-title">Skills</h2></div>
     <div class="skills-cols fi">
       <div class="skill-line"><div class="skill-name-text">Roblox Studio</div><div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:95%"></div></div><div class="skill-lv">Advanced</div></div>
       <div class="skill-line"><div class="skill-name-text">Lua / Luau</div><div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:90%"></div></div><div class="skill-lv">Advanced</div></div>
@@ -465,114 +593,423 @@ footer{padding:32px 80px 32px 72px;display:flex;justify-content:space-between;al
     </div>
   </section>
 
+  <!-- GROUPS -->
   <section id="groups">
-    <div class="sec-header fi">
-      <span class="sec-num">05</span>
-      <h2 class="sec-title">Groups</h2>
-    </div>
+    <div class="sec-header fi"><span class="sec-num">06</span><h2 class="sec-title">Groups</h2></div>
     <div class="groups-list fi">
-      <a href="https://www.roblox.com/communities/15446641/Lit-Games#!" target="_blank" class="group-row">
-        <div><div class="group-name">Lit Games!</div><div class="group-desc">154 members &mdash; building games the community wants.</div></div>
-        <div class="group-right"><span class="owner-mark">Owner</span><span class="group-type">Roblox</span><span class="group-arrow">&rarr;</span></div>
-      </a>
-      <a href="https://www.roblox.com/communities/35066611/The-FazBear-WorkShop#!" target="_blank" class="group-row">
-        <div><div class="group-name">The Fazbear Workshop</div><div class="group-desc">28,928 members &mdash; FNaF-themed creative community.</div></div>
-        <div class="group-right"><span class="group-type">Roblox</span><span class="group-arrow">&rarr;</span></div>
-      </a>
-      <a href="https://www.roblox.com/communities/35659217/Freddys-Faz-Stars-Services#!" target="_blank" class="group-row">
-        <div><div class="group-name">Freddy's Faz-Stars</div><div class="group-desc">FazBear services community. Active developer and contributor.</div></div>
-        <div class="group-right"><span class="group-type">Roblox</span><span class="group-arrow">&rarr;</span></div>
-      </a>
-      <a href="https://discord.gg/DaTngShGRR" target="_blank" class="group-row">
-        <div><div class="group-name">TFW Discord</div><div class="group-desc">842+ members &mdash; best place to reach me for commissions.</div></div>
-        <div class="group-right"><span class="group-type">Discord</span><span class="group-arrow">&rarr;</span></div>
-      </a>
+      <a href="https://www.roblox.com/communities/15446641/Lit-Games#!" target="_blank" class="group-row"><div><div class="group-name">Lit Games!</div><div class="group-desc">154 members &mdash; building games the community wants.</div></div><div class="group-right"><span class="owner-mark">Owner</span><span class="group-type">Roblox</span><span class="group-arrow">&rarr;</span></div></a>
+      <a href="https://www.roblox.com/communities/35066611/The-FazBear-WorkShop#!" target="_blank" class="group-row"><div><div class="group-name">The Fazbear Workshop</div><div class="group-desc">28,928 members &mdash; FNaF-themed creative community.</div></div><div class="group-right"><span class="group-type">Roblox</span><span class="group-arrow">&rarr;</span></div></a>
+      <a href="https://www.roblox.com/communities/35659217/Freddys-Faz-Stars-Services#!" target="_blank" class="group-row"><div><div class="group-name">Freddy's Faz-Stars</div><div class="group-desc">FazBear services community. Active developer and contributor.</div></div><div class="group-right"><span class="group-type">Roblox</span><span class="group-arrow">&rarr;</span></div></a>
+      <a href="https://discord.gg/DaTngShGRR" target="_blank" class="group-row"><div><div class="group-name">TFW Discord</div><div class="group-desc">842+ members &mdash; best place to reach me for commissions.</div></div><div class="group-right"><span class="group-type">Discord</span><span class="group-arrow">&rarr;</span></div></a>
     </div>
   </section>
 
+  <!-- LOG -->
   <section id="log">
-    <div class="sec-header fi">
-      <span class="sec-num">06</span>
-      <h2 class="sec-title">Updates</h2>
-    </div>
+    <div class="sec-header fi"><span class="sec-num">07</span><h2 class="sec-title">Updates</h2></div>
     <div class="log-entries fi">
-      <div class="log-entry">
-        <div><div class="log-date-val">Dec 6, 2025</div><div class="log-dot"></div></div>
-        <div>
-          <div class="log-entry-title">Text &amp; Quality Pass</div>
-          <div class="log-entry-body">Upgraded portfolio quality and refreshed copy across all pages.<ul><li>Text override across multiple sections</li><li>Improved descriptions and structure</li><li>Various small fixes</li></ul></div>
-        </div>
-      </div>
-      <div class="log-entry">
-        <div><div class="log-date-val">Launch</div><div class="log-dot"></div></div>
-        <div>
-          <div class="log-entry-title">Portfolio v1 Live</div>
-          <div class="log-entry-body">First version goes live. Games, commissions, showcases, and affiliations all published.</div>
-        </div>
-      </div>
+      <div class="log-entry"><div><div class="log-date-val">Dec 6, 2025</div><div class="log-dot"></div></div><div><div class="log-entry-title">Text &amp; Quality Pass</div><div class="log-entry-body">Upgraded portfolio quality and refreshed copy across all pages.<ul><li>Text override across multiple sections</li><li>Improved descriptions and structure</li></ul></div></div></div>
+      <div class="log-entry"><div><div class="log-date-val">Launch</div><div class="log-dot"></div></div><div><div class="log-entry-title">Portfolio v1 Live</div><div class="log-entry-body">First version goes live. Games, commissions, showcases, and affiliations all published.</div></div></div>
     </div>
   </section>
 
+  <!-- FIND ME -->
   <section id="contact">
-    <div class="sec-header fi">
-      <span class="sec-num">07</span>
-      <h2 class="sec-title">Find Me</h2>
-    </div>
+    <div class="sec-header fi"><span class="sec-num">08</span><h2 class="sec-title">Find Me</h2></div>
     <div class="find-grid fi">
-      <a href="https://discord.gg" target="_blank" class="find-card">
-        <div class="find-platform">Discord</div>
-        <div class="find-handle">TFW Server</div>
-        <div class="find-desc">842+ members. Best place to reach me for commissions.</div>
-        <div class="find-cta">Join &rarr;</div>
-      </a>
-      <a href="https://www.roblox.com/users/3517890678/profile" target="_blank" class="find-card">
-        <div class="find-platform">Roblox</div>
-        <div class="find-handle">N0TB0Z1N0R3AL</div>
-        <div class="find-desc">Active developer profile. All games and groups visible here.</div>
-        <div class="find-cta">View profile &rarr;</div>
-      </a>
-      <a href="https://www.youtube.com/@BOZINOSUP" target="_blank" class="find-card">
-        <div class="find-platform">YouTube</div>
-        <div class="find-handle">@BOZINOSUP</div>
-        <div class="find-desc">Silly Videos & STuff</div>
-        <div class="find-cta">Visit channel &rarr;</div>
-      </a>
+      <a href="https://discord.gg/DaTngShGRR" target="_blank" class="find-card"><div class="find-platform">Discord</div><div class="find-handle">TFW Server</div><div class="find-desc">842+ members. Best place to reach me for commissions.</div><div class="find-cta">Join &rarr;</div></a>
+      <a href="https://www.roblox.com/users/3517890678/profile" target="_blank" class="find-card"><div class="find-platform">Roblox</div><div class="find-handle">N0TB0Z1N0R3AL</div><div class="find-desc">Active developer profile. All games and groups visible here.</div><div class="find-cta">View profile &rarr;</div></a>
+      <a href="https://www.youtube.com/@BOZINOZI" target="_blank" class="find-card"><div class="find-platform">YouTube</div><div class="find-handle">@BOZINOZI</div><div class="find-desc">Dev content and project showcases. Pfp by Amaily.</div><div class="find-cta">Visit channel &rarr;</div></a>
     </div>
   </section>
 
   <footer>
-    <div class="footer-copy">2026 Bozino. All rights reserved.</div>
+    <div class="footer-copy">2025 Bozino. All rights reserved.</div>
     <div class="footer-links">
       <a href="#hero" class="footer-link">Top</a>
       <a href="#hire" class="footer-link">Hire</a>
-      <a href="https://discord.gg" target="_blank" class="footer-link">Discord</a>
+      <a href="https://discord.gg/DaTngShGRR" target="_blank" class="footer-link">Discord</a>
     </div>
   </footer>
-
 </div>
 
 <script>
-function toggleSb(){document.getElementById('sidebar').classList.toggle('open')}
-function setActive(el){
-  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
-  el.classList.add('active');
-  if(window.innerWidth<=960)setTimeout(()=>document.getElementById('sidebar').classList.remove('open'),250);
+// ── SUPABASE ──────────────────────────────────────────────────
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cslmvcfijvlihxlojpsk.supabase.co',
+  'sb_publishable_BBEBy7UYHY1sHFIu55ahLQ_aYwUVJWY'
+);
+
+// ── STATE ─────────────────────────────────────────────────────
+let currentUser = null;
+let currentProfile = null;
+let currentTab = 'login';
+let selectedRating = 0;
+let activeChatReceiverId = null;
+let activeChatReceiverName = '';
+let chatSub = null;
+
+// ── INIT ──────────────────────────────────────────────────────
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) await onSignIn(session.user);
+  sb.auth.onAuthStateChange(async (_e, session) => {
+    if (session) await onSignIn(session.user);
+    else onSignOut();
+  });
+  loadComments();
+  initScrollSpy();
+  initFadeIn();
 }
-document.querySelectorAll('section[id]').forEach(s=>{
-  new IntersectionObserver(entries=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting)
-        document.querySelectorAll('.sb-link').forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id));
+
+async function onSignIn(user) {
+  currentUser = user;
+  const { data } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  currentProfile = data;
+  updateAuthUI();
+}
+
+function onSignOut() {
+  currentUser = null;
+  currentProfile = null;
+  updateAuthUI();
+  loadComments();
+}
+
+function updateAuthUI() {
+  const btn = document.getElementById('auth-btn');
+  const avatarEl = document.getElementById('auth-avatar');
+  const textEl = document.getElementById('auth-btn-text');
+  if (currentUser) {
+    const av = currentProfile?.avatar_url || `https://api.dicebear.com/7.x/thumbs/svg?seed=${currentUser.id}`;
+    avatarEl.src = av;
+    avatarEl.style.display = 'block';
+    textEl.textContent = currentProfile?.username || currentUser.email.split('@')[0];
+  } else {
+    avatarEl.style.display = 'none';
+    textEl.textContent = 'Sign in / Sign up';
+  }
+  loadComments();
+}
+
+// ── AUTH ──────────────────────────────────────────────────────
+function handleAuthBtn() {
+  if (currentUser) openPanel('profile-panel');
+  else openModal('auth-modal');
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.modal-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='signup')));
+  document.getElementById('auth-username-wrap').style.display = tab === 'signup' ? 'block' : 'none';
+  document.getElementById('auth-submit-btn').textContent = tab === 'login' ? 'Sign in' : 'Create account';
+  document.getElementById('auth-modal-title').textContent = tab === 'login' ? 'Sign in' : 'Create account';
+  document.getElementById('auth-msg').textContent = '';
+}
+
+async function submitAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const msg = document.getElementById('auth-msg');
+  msg.className = 'modal-msg';
+  msg.textContent = 'Please wait...';
+  if (!email || !password) { msg.className='modal-msg err'; msg.textContent='Fill in all fields.'; return; }
+  if (currentTab === 'login') {
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) { msg.className='modal-msg err'; msg.textContent=error.message; }
+    else { msg.className='modal-msg ok'; msg.textContent='Signed in!'; setTimeout(()=>closeModal('auth-modal'), 800); }
+  } else {
+    const username = document.getElementById('auth-username').value.trim();
+    const { error } = await sb.auth.signUp({ email, password, options:{ data:{ preferred_username: username } } });
+    if (error) { msg.className='modal-msg err'; msg.textContent=error.message; }
+    else { msg.className='modal-msg ok'; msg.textContent='Account created! Check your email to confirm.'; }
+  }
+}
+
+async function signInGoogle() {
+  await sb.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: window.location.href } });
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  closePanel('profile-panel');
+}
+
+// ── PROFILE ───────────────────────────────────────────────────
+function openPanel(id) {
+  document.getElementById(id).classList.add('open');
+  if (id === 'profile-panel' && currentProfile) populateProfilePanel();
+}
+
+function closePanel(id) { document.getElementById(id).classList.remove('open'); }
+
+function populateProfilePanel() {
+  const av = currentProfile?.avatar_url || `https://api.dicebear.com/7.x/thumbs/svg?seed=${currentUser.id}`;
+  document.getElementById('panel-avatar').src = av;
+  document.getElementById('panel-username').textContent = currentProfile?.username || 'No username set';
+  document.getElementById('panel-email').textContent = currentUser?.email || '';
+  document.getElementById('edit-username').value = currentProfile?.username || '';
+  document.getElementById('edit-bio').value = currentProfile?.bio || '';
+  document.getElementById('edit-avatar').value = currentProfile?.avatar_url || '';
+  loadUserCommissions();
+}
+
+function switchPanelTab(btn, tabId) {
+  document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const tabs = ['profile-tab','commissions-tab','chat-tab-wrapper'];
+  tabs.forEach(t => {
+    const el = document.getElementById(t);
+    if (!el) return;
+    el.style.display = 'none';
+  });
+  const target = document.getElementById(tabId);
+  if (target) target.style.display = tabId === 'chat-tab-wrapper' ? 'flex' : 'block';
+}
+
+async function saveProfile() {
+  const msg = document.getElementById('profile-msg');
+  const username = document.getElementById('edit-username').value.trim();
+  const bio = document.getElementById('edit-bio').value.trim();
+  const avatar_url = document.getElementById('edit-avatar').value.trim();
+  const { error } = await sb.from('profiles').update({ username, bio, avatar_url }).eq('id', currentUser.id);
+  if (error) { msg.className='modal-msg err'; msg.textContent=error.message; }
+  else {
+    currentProfile = { ...currentProfile, username, bio, avatar_url };
+    msg.className='modal-msg ok'; msg.textContent='Saved!';
+    updateAuthUI();
+    setTimeout(()=>{ msg.textContent=''; }, 2000);
+  }
+}
+
+// ── COMMISSIONS ───────────────────────────────────────────────
+async function loadUserCommissions() {
+  if (!currentUser) return;
+  const wrap = document.getElementById('comm-list-inner');
+  const { data, error } = await sb.from('commissions').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+  if (error || !data?.length) {
+    wrap.innerHTML = '<div class="no-items">No commissions yet.<br/>Submit a request and it\'ll appear here once approved.</div>';
+    return;
+  }
+  wrap.innerHTML = data.map(c => `
+    <div class="comm-status-card">
+      <div class="comm-status-title">${c.title}</div>
+      ${c.description ? `<div class="comm-status-desc">${c.description}</div>` : ''}
+      <span class="status-badge status-${c.status}">${c.status.replace('_',' ')}</span>
+      ${c.price ? `<div class="comm-price">$${parseFloat(c.price).toFixed(2)}</div>` : ''}
+      ${c.notes ? `<div class="comm-status-desc" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><strong>Note:</strong> ${c.notes}</div>` : ''}
+    </div>`).join('');
+}
+
+// ── COMMENTS ─────────────────────────────────────────────────
+async function loadComments() {
+  const list = document.getElementById('comment-list');
+  const formWrap = document.getElementById('comment-form-wrap');
+  const { data } = await sb.from('comments').select('*, profiles(username, avatar_url)').eq('page','general').order('is_pinned', { ascending: false }).order('created_at', { ascending: false });
+
+  if (!data?.length) {
+    list.innerHTML = '<div class="no-items">No reviews yet. Be the first!</div>';
+  } else {
+    list.innerHTML = data.map(c => {
+      const av = c.profiles?.avatar_url || `https://api.dicebear.com/7.x/thumbs/svg?seed=${c.user_id}`;
+      const stars = c.rating ? '★'.repeat(c.rating) + '☆'.repeat(5-c.rating) : '';
+      const canDel = currentUser && (currentUser.id === c.user_id || currentProfile?.is_owner);
+      const isOwner = currentProfile?.is_owner;
+      return `<div class="comment-card${c.is_pinned?' pinned':''}">
+        <div class="comment-meta-row">
+          <img class="comment-avatar" src="${av}" alt=""/>
+          <span class="comment-username">${c.profiles?.username || 'Anonymous'}</span>
+          ${c.is_pinned ? '<span class="comment-pin">Pinned</span>' : ''}
+          <span class="comment-date">${new Date(c.created_at).toLocaleDateString()}</span>
+        </div>
+        ${stars ? `<div class="comment-stars">${stars}</div>` : ''}
+        <div class="comment-text">${escHtml(c.content)}</div>
+        ${isOwner ? `<div class="admin-actions"><button class="btn-admin" onclick="togglePin('${c.id}',${c.is_pinned})">${c.is_pinned?'Unpin':'Pin'}</button></div>` : ''}
+        ${canDel ? `<button class="comment-del" onclick="deleteComment('${c.id}')" title="Delete">&times;</button>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  if (currentUser) {
+    formWrap.innerHTML = `
+      <div class="comment-form">
+        <div class="comment-form-title">Leave a review</div>
+        <div class="star-row" id="star-row">
+          ${[1,2,3,4,5].map(i=>`<button class="star-btn" onclick="setRating(${i})" title="${i} star${i>1?'s':''}">&#9733;</button>`).join('')}
+        </div>
+        <textarea class="comment-textarea" id="comment-input" placeholder="Share your experience working with Bozino..." maxlength="500"></textarea>
+        <button class="comment-submit" onclick="submitComment()">Post review</button>
+        <p class="modal-msg" id="comment-msg"></p>
+      </div>`;
+    selectedRating = 0;
+  } else {
+    formWrap.innerHTML = `<div class="login-prompt">
+      <a onclick="openModal('auth-modal')">Sign in</a> to leave a review.
+    </div>`;
+  }
+}
+
+function setRating(n) {
+  selectedRating = n;
+  document.querySelectorAll('.star-btn').forEach((b,i) => b.classList.toggle('on', i < n));
+}
+
+async function submitComment() {
+  const content = document.getElementById('comment-input').value.trim();
+  const msg = document.getElementById('comment-msg');
+  if (!content) { msg.className='modal-msg err'; msg.textContent='Write something first.'; return; }
+  const { error } = await sb.from('comments').insert({ user_id: currentUser.id, content, rating: selectedRating||null, page:'general' });
+  if (error) { msg.className='modal-msg err'; msg.textContent=error.message; }
+  else { await loadComments(); }
+}
+
+async function deleteComment(id) {
+  if (!confirm('Delete this review?')) return;
+  await sb.from('comments').delete().eq('id', id);
+  loadComments();
+}
+
+async function togglePin(id, pinned) {
+  await sb.from('comments').update({ is_pinned: !pinned }).eq('id', id);
+  loadComments();
+}
+
+// ── CHAT ─────────────────────────────────────────────────────
+async function loadChat() {
+  if (!currentUser) return;
+  const threadView = document.getElementById('chat-thread-view');
+  // For visitors: they can message you (the owner)
+  // Show their conversation with Bozino by default
+  const { data: ownerData } = await sb.from('profiles').select('id,username,avatar_url').eq('is_owner', true).single();
+  if (!ownerData) {
+    threadView.innerHTML = '<div class="no-items">Chat coming soon!</div>';
+    return;
+  }
+  if (currentProfile?.is_owner) {
+    // Owner sees all conversations
+    const { data } = await sb.from('messages')
+      .select('sender_id, receiver_id, content, created_at, profiles!messages_sender_id_fkey(username, avatar_url)')
+      .or(`receiver_id.eq.${currentUser.id},sender_id.eq.${currentUser.id}`)
+      .order('created_at', { ascending: false });
+    const seen = new Set();
+    const threads = (data||[]).filter(m => {
+      const otherId = m.sender_id === currentUser.id ? m.receiver_id : m.sender_id;
+      if (seen.has(otherId)) return false;
+      seen.add(otherId); return true;
     });
-  },{threshold:0.25}).observe(s);
-});
-document.querySelectorAll('.fi').forEach((el,i)=>{
-  new IntersectionObserver((entries,obs)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){setTimeout(()=>e.target.classList.add('vis'),(i%5)*60);obs.unobserve(e.target);}
-    });
-  },{threshold:0.08}).observe(el);
-});
+    threadView.innerHTML = threads.length ? threads.map(m => {
+      const otherId = m.sender_id === currentUser.id ? m.receiver_id : m.sender_id;
+      const name = m.profiles?.username || 'User';
+      const av = m.profiles?.avatar_url || `https://api.dicebear.com/7.x/thumbs/svg?seed=${otherId}`;
+      return `<div class="chat-thread" onclick="openConvo('${otherId}','${escHtml(name)}')">
+        <img class="chat-thread-avatar" src="${av}" alt=""/>
+        <div><div class="chat-thread-name">${escHtml(name)}</div><div class="chat-thread-preview">${escHtml(m.content.slice(0,40))}...</div></div>
+      </div>`;
+    }).join('') : '<div class="no-items">No messages yet.</div>';
+  } else {
+    // Regular user: go straight to convo with owner
+    openConvo(ownerData.id, ownerData.username || 'Bozino');
+  }
+}
+
+async function openConvo(receiverId, receiverName) {
+  activeChatReceiverId = receiverId;
+  activeChatReceiverName = receiverName;
+  document.getElementById('chat-convo-name').textContent = receiverName;
+  document.getElementById('chat-thread-view').style.display = 'none';
+  const convo = document.getElementById('chat-convo-view');
+  convo.style.display = 'flex';
+  await fetchMessages();
+  subscribeToMessages();
+}
+
+async function fetchMessages() {
+  const { data } = await sb.from('messages')
+    .select('*')
+    .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${activeChatReceiverId}),and(sender_id.eq.${activeChatReceiverId},receiver_id.eq.${currentUser.id})`)
+    .order('created_at', { ascending: true });
+  renderMessages(data || []);
+  // Mark as read
+  await sb.from('messages').update({ is_read: true }).eq('receiver_id', currentUser.id).eq('sender_id', activeChatReceiverId);
+}
+
+function renderMessages(msgs) {
+  const list = document.getElementById('chat-messages-list');
+  if (!msgs.length) { list.innerHTML = '<div class="no-items" style="align-self:center">No messages yet. Say hi!</div>'; return; }
+  list.innerHTML = msgs.map(m => {
+    const mine = m.sender_id === currentUser.id;
+    const time = new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    return `<div class="chat-bubble ${mine?'mine':'theirs'}">${escHtml(m.content)}<div class="chat-bubble-meta">${time}</div></div>`;
+  }).join('');
+  list.scrollTop = list.scrollHeight;
+}
+
+function subscribeToMessages() {
+  if (chatSub) chatSub.unsubscribe();
+  chatSub = sb.channel('chat').on('postgres_changes', { event:'INSERT', schema:'public', table:'messages' }, payload => {
+    const m = payload.new;
+    if ((m.sender_id===currentUser.id&&m.receiver_id===activeChatReceiverId)||(m.sender_id===activeChatReceiverId&&m.receiver_id===currentUser.id)) {
+      fetchMessages();
+    }
+  }).subscribe();
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const content = input.value.trim();
+  if (!content || !activeChatReceiverId) return;
+  input.value = '';
+  await sb.from('messages').insert({ sender_id: currentUser.id, receiver_id: activeChatReceiverId, content });
+}
+
+function backToThreads() {
+  document.getElementById('chat-convo-view').style.display = 'none';
+  document.getElementById('chat-thread-view').style.display = 'block';
+  if (chatSub) chatSub.unsubscribe();
+}
+
+// ── MODAL HELPERS ─────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target===o) closeModal(o.id); }));
+document.querySelectorAll('.panel-overlay').forEach(o => o.addEventListener('click', e => { if (e.target===o) closePanel(o.id); }));
+
+// ── NAV ───────────────────────────────────────────────────────
+function toggleSb() { document.getElementById('sidebar').classList.toggle('open'); }
+function setActive(el) {
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  el.classList.add('active');
+  if (window.innerWidth<=960) setTimeout(()=>document.getElementById('sidebar').classList.remove('open'),250);
+}
+
+function initScrollSpy() {
+  document.querySelectorAll('section[id]').forEach(s => {
+    new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting)
+          document.querySelectorAll('.sb-link').forEach(l => l.classList.toggle('active', l.getAttribute('href')==='#'+e.target.id));
+      });
+    }, { threshold: 0.25 }).observe(s);
+  });
+}
+
+function initFadeIn() {
+  document.querySelectorAll('.fi').forEach((el,i) => {
+    new IntersectionObserver((entries,obs) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { setTimeout(()=>e.target.classList.add('vis'),(i%5)*60); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 }).observe(el);
+  });
+}
+
+// ── UTIL ──────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+init();
 </script>
 </body>
 </html>
